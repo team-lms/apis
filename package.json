@@ -1,0 +1,27 @@
+{
+  "name": "leave-management-system-backend",
+  "version": "1.0.0",
+  "description": "The backend for leave management system",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rohit2sharma95/Leave_Management_System_Frontend_Admin.git"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "sequelize",
+    "mysql",
+    "jwt",
+    "axios"
+  ],
+  "author": "@rohit2sharma95",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rohit2sharma95/Leave_Management_System_Frontend_Admin/issues"
+  },
+  "homepage": "https://github.com/rohit2sharma95/Leave_Management_System_Frontend_Admin#readme"
+}

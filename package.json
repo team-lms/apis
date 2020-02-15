@@ -23,5 +23,12 @@
   "bugs": {
     "url": "https://github.com/rohit2sharma95/Leave_Management_System_Frontend_Admin/issues"
   },
-  "homepage": "https://github.com/rohit2sharma95/Leave_Management_System_Frontend_Admin#readme"
+  "homepage": "https://github.com/rohit2sharma95/Leave_Management_System_Frontend_Admin#readme",
+  "dependencies": {
+    "mysql2": "^2.1.0",
+    "sequelize": "^5.21.4"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^5.5.1"
+  }
 }

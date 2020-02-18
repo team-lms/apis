@@ -1,5 +1,6 @@
-'use strict';
-const { RolesConstants, StatusConstants } = require("../src/constants")
+
+const { RolesConstants, StatusConstants } = require('../src/constants');
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     id: {
@@ -9,10 +10,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     firstName: {
       allowNull: false,
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(50)
     },
     lastName: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(50)
     },
     email: {
       allowNull: false,
@@ -26,17 +27,17 @@ module.exports = (sequelize, DataTypes) => {
     },
     whatsappNumber: {
       unique: true,
-      type: DataTypes.STRING(10),
+      type: DataTypes.STRING(10)
     },
     deviceToken: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(50)
     },
     appVersion: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(50)
     },
     password: {
       allowNull: false,
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING(100)
     },
     designation: {
       allowNull: false,
@@ -61,19 +62,19 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: StatusConstants.INACTIVE
     },
     casualLeaves: {
-      type: DataTypes.INTEGER(3),
+      type: DataTypes.INTEGER,
     },
     bufferLeaves: {
-      type: DataTypes.INTEGER(3)
+      type: DataTypes.INTEGER
     },
     unAuthorizedLeaves: {
-      type: DataTypes.INTEGER(3)
-    },
-
-
-  }, {});
-  User.associate = function (models) {
-    // associations can be defined here
+      type: DataTypes.INTEGER
+    }
+  }, { paranoid: true });
+  User.associate = (models) => {
+    User.hasMany(models.Otp, { as: 'otps', foreignKey: 'userId' });
+    User.hasMany(models.Leave, { as: 'leaves', foreignKey: 'userId' });
+    User.hasMany(models.TeamAssociation, { as: 'teamAssociations', foreignKey: 'userId' });
   };
   return User;
 };

@@ -1,4 +1,5 @@
-const { StatusConstants } = require("../src/constants")
+const { StatusConstants } = require('../src/constants');
+
 module.exports = (sequelize, DataTypes) => {
   const Otp = sequelize.define('Otp', {
     userId: {
@@ -18,12 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {});
   Otp.associate = (models) => {
-    Otp.belongsTo(models.user, {
-      as: 'user',
-      foreignKey: 'userId',
-      foreignKeyConstraint: true
-    }
-    )
+    Otp.belongsTo(models.user, { as: 'user', foreignKey: 'userId', foreignKeyConstraint: true });
   };
   return Otp;
 };

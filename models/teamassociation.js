@@ -1,27 +1,22 @@
-const { StatusConstants } = require("../src/constants")
+const { StatusConstants } = require('../src/constants');
+
 module.exports = (sequelize, DataTypes) => {
-  const teamAssociation = sequelize.define('teamAssociation', {
+  const TeamAssociation = sequelize.define('TeamAssociation', {
     userId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER
     },
     isSupervisor: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.BOOLEAN
     },
     status: {
       type: DataTypes.ENUM(
         StatusConstants.ACTIVE,
         StatusConstants.INACTIVE
-      ),
+      )
     }
-  }, {});
-  teamAssociation.associate = (models) => {
-    teamAssociation.belongsTo('models.user', {
-      as: 'user',
-      foreignKey: 'userId',
-      foreignKeyConstraint: true
-    })
-
-    // associations can be defined here
+  }, { paranoid: true });
+  TeamAssociation.associate = (models) => {
+    TeamAssociation.belongsTo(models.User, { as: 'user', foreignKey: 'userId', foreignKeyConstraint: true });
   };
-  return teamAssociation;
+  return TeamAssociation;
 };

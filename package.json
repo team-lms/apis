@@ -4,6 +4,8 @@
   "description": "The backend for leave management system",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,8 +27,16 @@
   },
   "homepage": "https://github.com/rohit2sharma95/Leave_Management_System_Frontend_Admin#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "chalk": "^3.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "morgan": "^1.9.1",
     "mysql2": "^2.1.0",
-    "sequelize": "^5.21.4"
+    "nodemon": "^2.0.2",
+    "sequelize": "^5.21.4",
+    "validate.js": "^0.13.1"
   },
   "devDependencies": {
     "eslint": "^6.8.0",

@@ -1,3 +1,3 @@
 module.exports = Object.freeze({
-  PHONE_NUMBER_LENGTH: 10
-})
+  PHONE_NUMBER_LENGTH: 10,
+});

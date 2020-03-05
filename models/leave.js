@@ -4,22 +4,22 @@ module.exports = (sequelize, DataTypes) => {
   const Leave = sequelize.define('Leave', {
     userId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     leaveType: {
       allowNull: false,
       type: DataTypes.ENUM(
         LeaveTypeConstants.FLOATING,
-        LeaveTypeConstants.GENERAL
-      )
+        LeaveTypeConstants.GENERAL,
+      ),
     },
     durationInDays: {
       allowNull: false,
-      type: DataTypes.STRING(50)
+      type: DataTypes.STRING(50),
     },
     description: {
       type: DataTypes.STRING(1000),
-      allowNull: false
+      allowNull: false,
     },
     status: {
       allowNull: false,
@@ -29,8 +29,8 @@ module.exports = (sequelize, DataTypes) => {
         StatusConstants.APPROVED,
         StatusConstants.REJECTED,
         StatusConstants.CREDITED,
-        StatusConstants.DEDUCTED
-      )
+        StatusConstants.DEDUCTED,
+      ),
     },
     fromDate: {
       allowNull: false,
@@ -38,11 +38,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     toDate: {
       allowNull: false,
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
     },
     deletedAt: {
-      type: DataTypes.DATE
-    }
+      type: DataTypes.DATE,
+    },
   }, { paranoid: true });
   Leave.associate = (models) => {
     Leave.belongsTo(models.User, { as: 'user', foreignKey: 'userId', foreignKeyConstraint: true });

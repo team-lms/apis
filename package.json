@@ -27,7 +27,9 @@
   },
   "homepage": "https://github.com/rohit2sharma95/Leave_Management_System_Frontend_Admin#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "chalk": "^3.0.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "morgan": "^1.9.1",

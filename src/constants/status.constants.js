@@ -6,5 +6,5 @@ module.exports = Object.freeze({
   APPROVED: 'Approved',
   REJECTED: 'Rejected',
   CREDITED: 'Credited',
-  DEDUCTED: 'Deducted'
+  DEDUCTED: 'Deducted',
 });

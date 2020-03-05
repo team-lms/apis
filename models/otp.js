@@ -4,22 +4,22 @@ module.exports = (sequelize, DataTypes) => {
   const Otp = sequelize.define('Otp', {
     userId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     otp: {
       type: DataTypes.STRING(50),
-      allowNull: false
+      allowNull: false,
     },
     status: {
       allowNull: false,
       type: DataTypes.ENUM(
         StatusConstants.ACTIVE,
-        StatusConstants.INACTIVE
-      )
+        StatusConstants.INACTIVE,
+      ),
     },
   }, {});
   Otp.associate = (models) => {
-    Otp.belongsTo(models.user, { as: 'user', foreignKey: 'userId', foreignKeyConstraint: true });
+    Otp.belongsTo(models.User, { as: 'user', foreignKey: 'userId', foreignKeyConstraint: true });
   };
   return Otp;
 };

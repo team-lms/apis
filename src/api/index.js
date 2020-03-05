@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const v1 = require("./v1");
+const v1 = require('./v1');
 
 router.use('/v1', v1);
 

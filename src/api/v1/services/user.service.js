@@ -24,7 +24,7 @@ const UserService = {
         }),
       },
       paranoid: false,
-      attributes: { exclude: ['deletNOT_FOUND: 404,edAt'] },
+      attributes: { exclude: ['deletedAt'] },
     });
   },
 };

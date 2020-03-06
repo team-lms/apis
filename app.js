@@ -4,7 +4,6 @@ const cors = require('cors');
 const morgan = require('morgan');
 const api = require('./src/api');
 
-
 const app = express();
 
 app.use(morgan(':method : url : status :user-agent - :response-time ms'));

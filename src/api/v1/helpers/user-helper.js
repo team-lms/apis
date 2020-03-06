@@ -3,26 +3,29 @@ const {
   Validator, ApiError, Crypto, Response,
 } = require('../../../utils');
 const {
-  ValidationConstant, MessageCodeConstants, RolesConstants, StatusCodeConstants,
+  ValidationConstant,
+  MessageCodeConstants,
+  RolesConstants,
+  StatusCodeConstants,
 } = require('../../../constants');
 const { UserService } = require('../services');
 
 const UserHelper = {
 
-  createNewUser: async (reqbody) => {
+  createNewUser: async (reqBody) => {
     try {
       const userToBeCreated = {
-        firstName: reqbody.firstName,
-        lastName: reqbody.lastName,
-        email: reqbody.email,
-        phoneNumber: `${reqbody.phoneNumber}`,
-        whatsappNumber: `${reqbody.whatsappNumber || ''}` || null,
-        deviceToken: reqbody.deviceToken,
-        appVersion: reqbody.appVersion,
-        password: reqbody.password,
-        designation: reqbody.designation,
-        role: reqbody.role,
-        status: reqbody.status,
+        firstName: reqBody.firstName,
+        lastName: reqBody.lastName,
+        email: reqBody.email,
+        phoneNumber: `${reqBody.phoneNumber}`,
+        whatsappNumber: `${reqBody.whatsappNumber || ''}` || null,
+        deviceToken: reqBody.deviceToken,
+        appVersion: reqBody.appVersion,
+        password: reqBody.password,
+        designation: reqBody.designation,
+        role: reqBody.role,
+        status: reqBody.status,
       };
 
       const validationResult = Validator.validate(userToBeCreated, {
@@ -58,11 +61,10 @@ const UserHelper = {
       userToBeCreated.role = RolesConstants.EMPLOYEE;
       const password = Crypto.randomBytes(4);
       userToBeCreated.password = await bcrypt.hash(password, 10);
-      let createdUser = {};
       userToBeCreated.casualLeaves = 0;
       userToBeCreated.bufferLeaves = 0;
       userToBeCreated.unAuthorizedLeaves = 0;
-      createdUser = await UserService.createUser(userToBeCreated);
+      const createdUser = await UserService.createUser(userToBeCreated);
       return {
         success: true,
         data: Response.sendSuccess(

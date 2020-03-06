@@ -1,8 +1,7 @@
 module.exports = Object.freeze({
-
-  VALIDATION_ERROR: 'Validation Error',
-  ALREADY_EXIST: 'User Already Exists',
-  EMAIL_ALREADY_EXISTS: 'Email Already Exists',
-  unAuthorizedLeaves: 'Phone Number Already Exists',
-  USER_CREATED_SUCCESSFULLY: 'User Created Successfully',
+  VALIDATION_ERROR: 'Validation error',
+  ALREADY_EXISTS: 'Resource already exists',
+  EMAIL_ALREADY_EXISTS: 'Email already exists',
+  PHONE_ALREADY_EXISTS: 'Phone number already exists',
+  USER_CREATED_SUCCESSFULLY: 'User created successfully',
 });

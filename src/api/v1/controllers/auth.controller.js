@@ -20,5 +20,10 @@ module.exports = {
         code,
       ));
     }
-  }
+  },
+
+  login: async (req, res) => {
+    const requestBody = req.body;
+    const result = await UserHelper.loginUser(requestBody);
+  },
 };

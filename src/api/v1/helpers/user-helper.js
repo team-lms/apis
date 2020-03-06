@@ -65,6 +65,7 @@ const UserHelper = {
       userToBeCreated.bufferLeaves = 0;
       userToBeCreated.unAuthorizedLeaves = 0;
       const createdUser = await UserService.createUser(userToBeCreated);
+
       return {
         success: true,
         data: Response.sendSuccess(
@@ -74,6 +75,7 @@ const UserHelper = {
               id: createdUser.id,
               firstName: createdUser.firstName,
               lastName: createdUser.lastName,
+              password: 'Password has been sent to your mail',
               email: createdUser.email,
               phoneNumber: createdUser.phoneNumber,
               whatsappNumber: createdUser.whatsappNumber,
@@ -97,6 +99,20 @@ const UserHelper = {
     }
   },
 
+  loginUser: async (reqBody) => {
+    const userToBeLoggedIn = {
+      email: reqBody.email,
+      password: reqBody.password,
+    };
+    const validationResult = Validator.validate(userToBeLoggedIn, {
+      email: { presence: { allowEmpty: false }, email: true },
+      password: { presence: { allowEmpty: false } },
+    });
+    if (validationResult) {
+      throw ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR, validationResult);
+    }
+  },
 };
+
 
 module.exports = UserHelper;

@@ -11,7 +11,7 @@ module.exports = {
         secureConnection: false,
         auth: {
           user: 'siju.samson@enukesoftware.com',
-          password: 'Admin123@',
+          pass: 'Admin123@',
         },
       });
       return transporter.sendMail({

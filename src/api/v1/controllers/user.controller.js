@@ -30,7 +30,7 @@ module.exports = {
         password: requestBody.password,
         designation: requestBody.designation,
         role: requestBody.role,
-        status: requestBody.status,
+        status: requestBody.status
       };
       const validationResult = Validator.validate(userToBeCreated, {
         firstName: { presence: { allowEmpty: false } },
@@ -82,7 +82,6 @@ module.exports = {
           password
         });
 
-        console.log(html);
         Mailer.sendMail({
           to: createdUser.email,
           subject: 'User Created Successfully',

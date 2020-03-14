@@ -2,13 +2,13 @@ const nodemailer = require('nodemailer');
 
 module.exports = {
   sendMail: async ({
-    from, to, subject, text,
+    to, subject, html,
   }) => {
     try {
       const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 587,
-        secure: false,
+        secureConnection: false,
         auth: {
           user: 'siju.samson@enukesoftware.com',
           password: 'Admin123@',
@@ -16,13 +16,12 @@ module.exports = {
       });
       return transporter.sendMail({
         from: 'siju.samson@enukesoftware.com',
-        to: 'rohit.kumar@enukesoftware.com',
-        subject: 'Hello',
-        text: 'Hello World',
-        html: '<b>Hello World?</b>',
+        to,
+        subject,
+        html,
       });
     } catch (error) {
-      console.log(error);
+      return error;
     }
   },
 };

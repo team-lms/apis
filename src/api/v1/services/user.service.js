@@ -4,6 +4,7 @@ const { User } = require('../../../../models');
 const { Op } = Sequelize;
 
 const UserService = {
+
   createUser: async (userToBeCreated) => User.create(
     userToBeCreated,
   ),
@@ -27,6 +28,8 @@ const UserService = {
       attributes: { exclude: ['deletedAt'] },
     });
   },
+
+
 };
 module.exports = {
   UserService,

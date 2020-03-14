@@ -4,4 +4,7 @@ module.exports = Object.freeze({
   EMAIL_ALREADY_EXISTS: 'Email already exists',
   PHONE_ALREADY_EXISTS: 'Phone number already exists',
   USER_CREATED_SUCCESSFULLY: 'User created successfully',
+  USER_NOT_FOUND: 'User not found',
+  PASSWORD_INCORRECT: 'Passwords did not match',
+  USER_FETCHED_SUCCESSFULLY: 'User Fetched Successfully'
 });

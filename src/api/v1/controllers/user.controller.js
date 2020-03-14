@@ -1,14 +1,21 @@
 const Chalk = require('chalk');
 const bcrypt = require('bcryptjs');
+const pug = require('pug');
+const path = require('path');
+
+
 const { UserService } = require('../services');
 const {
-  Response, Validator, ApiError, Crypto
+  Response, Validator, ApiError, Crypto, Mailer
 } = require('../../../utils');
 const {
   StatusCodeConstants, ValidationConstant, MessageCodeConstants, RolesConstants
 } = require('../../../constants');
 
 module.exports = {
+  /**
+   * To create a user.
+   */
   create: async (req, res) => {
     try {
       const requestBody = req.body;
@@ -67,6 +74,23 @@ module.exports = {
       userToBeCreated.bufferLeaves = 0;
       userToBeCreated.unAuthorizedLeaves = 0;
       const createdUser = await UserService.createUser(userToBeCreated);
+      const userName = `${userToBeCreated.firstName || ''} ${userToBeCreated.lastName || ''}`.trim();
+
+      (async () => {
+        const html = await pug.renderFile(path.join(__dirname, '../../../templates/create-user.pug'), {
+          userName,
+          password
+        });
+
+        console.log(html);
+        Mailer.sendMail({
+          to: createdUser.email,
+          subject: 'User Created Successfully',
+          html
+        });
+      })();
+
+
       const user = {
         id: createdUser.id,
         firstName: createdUser.firstName,

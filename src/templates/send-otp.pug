@@ -1,0 +1,16 @@
+html
+  head
+    link(href='https://fonts.googleapis.com/css?family=Roboto:400,700,900' rel='stylesheet')
+    style.
+      body{font-family: 'Roboto', sans-serif;}
+  body
+    table(style='width:560px;margin:10px auto 20px;border:1px solid #ddd;border-radius: 3px;background: #e3e3e3;')
+      tr
+        td
+          table(style='width:560px;border-radius: 6px;background: #fff;')
+            tr
+              td
+                h1(style='margin:10px 10px 0;font-size: 20px;') Hello #{userName}
+            tr
+              td
+                h3(style='margin:10px 10px 0;font-size:14px;') Dear Customer, your Otp for Reset Password is #{otp}, Use this otp to reset your password.

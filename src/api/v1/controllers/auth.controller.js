@@ -1,10 +1,13 @@
 const bcrypt = require('bcryptjs');
 const Chalk = require('chalk');
-const { UserService, JwtService } = require('../services');
+const { UserService, JwtService, OtpService } = require('../services');
 const { Validator, ApiError, Response } = require('../../../utils');
 const { MessageCodeConstants, StatusCodeConstants, StatusConstants } = require('../../../constants');
 
 module.exports = {
+  /**
+   * To Login
+   */
   login: async (req, res) => {
     try {
       const userToBeLoggedIn = req.body;
@@ -40,4 +43,35 @@ module.exports = {
       ));
     }
   },
+
+  /**
+   * To send Otp
+   */
+
+  sendOtp: async (req, res) => {
+    try {
+      const userOtp = req.body;
+      const validationResult = Validator.validate(userOtp, {
+        email: { presence: { allowEmpty: false }, email: true }
+      });
+      if (validationResult) {
+        throw new ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR, validationResult);
+      }
+      const foundUser = await UserService.findUserByEmailOrPhone({ email: userOtp.email });
+      if (foundUser) {
+        OtpService.sendOtp(foundUser);
+        return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+          MessageCodeConstants.OTP_SENT_SUCCESSFULLY,
+          {},
+          StatusCodeConstants.SUCCESS
+        ));
+      } throw new ApiError.ValidationError(MessageCodeConstants.USER_NOT_FOUND);
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      return res.status(code).json({
+        message,
+        error,
+        code
+      });
+    }
+  }
 };

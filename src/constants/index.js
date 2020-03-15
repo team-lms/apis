@@ -4,6 +4,7 @@ const LeaveTypeConstants = require('./leave-type.constants');
 const ValidationConstant = require('./validation.constants');
 const StatusCodeConstants = require('./status-code.constants');
 const MessageCodeConstants = require('./messages.constants');
+const EmailConstants = require('./email.constants');
 
 module.exports = Object.freeze({
   RolesConstants,
@@ -12,4 +13,5 @@ module.exports = Object.freeze({
   ValidationConstant,
   StatusCodeConstants,
   MessageCodeConstants,
+  EmailConstants
 });

@@ -6,16 +6,16 @@ module.exports = {
   }) => {
     try {
       const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secureConnection: false,
+        host: process.env.SMTP_HOST_NAME,
+        port: process.env.SMTP_PORT_NO,
+        secureConnection: process.env.SMTP_SECURE_CONNECTION,
         auth: {
-          user: 'siju.samson@enukesoftware.com',
-          pass: 'Admin123@',
+          user: process.env.SMTP_USER_NAME,
+          pass: process.env.SMTP_PASSWORD,
         },
       });
       return transporter.sendMail({
-        from: 'siju.samson@enukesoftware.com',
+        from: process.env.SMTP_USER_NAME,
         to,
         subject,
         html,

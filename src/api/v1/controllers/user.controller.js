@@ -52,7 +52,6 @@ module.exports = {
       }
 
       // check if a user is present with same email
-
       const alreadyUser = await UserService.findUserByEmailOrPhone(
         {
           email: userToBeCreated.email,
@@ -84,7 +83,7 @@ module.exports = {
 
         Mailer.sendMail({
           to: createdUser.email,
-          subject: 'User Created Successfully',
+          subject: MessageCodeConstants.USER_CREATED_SUCCESSFULLY,
           html
         });
       })();
@@ -94,7 +93,7 @@ module.exports = {
         id: createdUser.id,
         firstName: createdUser.firstName,
         lastName: createdUser.lastName,
-        password: 'Password has been sent to your mail',
+        password: MessageCodeConstants.PASSWORD_SENT_SUCCESSFULLY,
         email: createdUser.email,
         phoneNumber: createdUser.phoneNumber,
         whatsappNumber: createdUser.whatsappNumber,

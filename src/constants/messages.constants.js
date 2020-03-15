@@ -6,5 +6,6 @@ module.exports = Object.freeze({
   USER_CREATED_SUCCESSFULLY: 'User created successfully',
   USER_NOT_FOUND: 'User not found',
   PASSWORD_INCORRECT: 'Passwords did not match',
-  USER_FETCHED_SUCCESSFULLY: 'User Fetched Successfully'
+  USER_FETCHED_SUCCESSFULLY: 'User Fetched Successfully',
+  PASSWORD_SENT_SUCCESSFULLY: 'Password has been sent to your mail'
 });

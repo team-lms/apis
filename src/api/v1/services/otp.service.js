@@ -31,6 +31,13 @@ const OtpService = {
       html
     });
   },
+
+  getOtpByUserId: async ({ id }) => Otp.findOne({
+    where: {
+      userId: id,
+      status: StatusConstants.ACTIVE
+    }
+  })
 };
 
 module.exports = {

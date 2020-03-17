@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const Chalk = require('chalk');
+const moment = require('moment');
 const { UserService, JwtService, OtpService } = require('../services');
 const { Validator, ApiError, Response } = require('../../../utils');
 const { MessageCodeConstants, StatusCodeConstants, StatusConstants } = require('../../../constants');
@@ -65,6 +66,50 @@ module.exports = {
           {},
           StatusCodeConstants.SUCCESS
         ));
+      } throw new ApiError.ValidationError(MessageCodeConstants.USER_NOT_FOUND);
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      return res.status(code).json({
+        message,
+        error,
+        code
+      });
+    }
+  },
+
+  /**
+   * Verify Otp
+   */
+
+  verifyOtp: async (req, res) => {
+    try {
+      const userPasswordChange = req.body;
+      const validationResult = Validator.validate({
+        email: { presence: { allowEmpty: false }, email: true },
+        otp: { presence: { allowEmpty: false } },
+        password: { presence: { allowEmpty: false } }
+      });
+      if (validationResult) {
+        throw new ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR, validationResult);
+      }
+      const foundUser = await UserService.findUserByEmailOrPhone(
+        { email: userPasswordChange.email }
+      );
+      if (foundUser) {
+        const foundOtp = await OtpService.getOtpByUserId(foundUser);
+        if (foundOtp && `${foundOtp.otp}` === `${userPasswordChange.otp}`) {
+          const otpDuration = moment.utc().diff(moment.utc(foundOtp.createdAt), 'minute');
+          if (otpDuration <= Number(process.env.OTP_DURATION)) {
+            userPasswordChange.password = await bcrypt.hash(userPasswordChange.password, 10);
+            await UserService.updateUser(userPasswordChange, foundUser);
+            return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+              MessageCodeConstants.PASSWORD_UPDATED_SUCCESSFULLY,
+              {},
+              StatusCodeConstants.SUCCESS
+            ));
+          }
+          throw new ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR,
+            MessageCodeConstants.OTP_EXPIRED);
+        } throw new ApiError.ValidationError(MessageCodeConstants);
       } throw new ApiError.ValidationError(MessageCodeConstants.USER_NOT_FOUND);
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       return res.status(code).json({

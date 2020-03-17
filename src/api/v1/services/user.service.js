@@ -29,6 +29,10 @@ const UserService = {
     });
   },
 
+  updateUser: async ({ password }, { id }) => User.update(
+    { password },
+    { where: { id } }
+  )
 
 };
 module.exports = {

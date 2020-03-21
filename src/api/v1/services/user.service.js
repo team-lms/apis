@@ -32,7 +32,17 @@ const UserService = {
   updateUser: async ({ password }, { id }) => User.update(
     { password },
     { where: { id } }
-  )
+  ),
+
+  getAllUsers: async ({ role }, {
+    search, offset, limit, sortBy, sortType
+  }) => User.findAndCountAll({
+    attributes: { exclude: ['deviceToken', 'appVersion', 'password', 'createdAt', 'updatedAt', 'deletedAt'] },
+    where: { role },
+    order: [[sortBy, sortType]],
+    offset,
+    limit
+  })
 
 };
 module.exports = {

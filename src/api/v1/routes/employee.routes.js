@@ -6,5 +6,6 @@ const { EmployeeController } = require('../controllers');
 
 
 router.post('/get', EmployeeController.getAll);
+router.post('/create', EmployeeController.)
 
 module.exports = router;

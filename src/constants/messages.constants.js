@@ -14,5 +14,6 @@ module.exports = Object.freeze({
   OTP_DO_NOT_MATCH: 'OTP do not match',
   PASSWORD_UPDATED_SUCCESSFULLY: 'Password has been updated successfully',
   UNAUTHORIZED_USER: 'Unauthorized User',
-  EMPLOYEE_FETCHED: 'Employee Fetched Successfully'
+  EMPLOYEE_FETCHED: 'Employee Fetched Successfully',
+  EMPLOYEE_CREATED: 'Employee Created Successfully'
 });

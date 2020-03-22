@@ -1,5 +1,8 @@
-
-const { RolesConstants, StatusConstants } = require('../src/constants');
+const {
+  DefaultValuesConstants,
+  RolesConstants,
+  StatusConstants
+} = require('../src/constants');
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
@@ -63,18 +66,26 @@ module.exports = (sequelize, DataTypes) => {
     },
     casualLeaves: {
       type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: DefaultValuesConstants.USER_CASUAL_LEAVES,
     },
     bufferLeaves: {
       type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: DefaultValuesConstants.USER_BUFFER_LEAVES
     },
     unAuthorizedLeaves: {
       type: DataTypes.INTEGER,
-    },
+      allowNull: false,
+      defaultValue: DefaultValuesConstants.USER_UNAUTHORIZED_LEAVES
+    }
   }, { paranoid: true });
+
   User.associate = (models) => {
     User.hasMany(models.Otp, { as: 'otps', foreignKey: 'userId' });
     User.hasMany(models.Leave, { as: 'leaves', foreignKey: 'userId' });
     User.hasMany(models.TeamAssociation, { as: 'teamAssociations', foreignKey: 'userId' });
   };
+
   return User;
 };

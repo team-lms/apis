@@ -1,19 +1,21 @@
-const RolesConstants = require('./roles.constants');
-const StatusConstants = require('./status.constants');
-const LeaveTypeConstants = require('./leave-type.constants');
-const ValidationConstant = require('./validation.constants');
-const StatusCodeConstants = require('./status-code.constants');
-const MessageCodeConstants = require('./messages.constants');
+const DefaultValuesConstants = require('./default-values.constants');
 const EmailConstants = require('./email.constants');
+const LeaveTypeConstants = require('./leave-type.constants');
+const MessageCodeConstants = require('./messages.constants');
 const QueryConstants = require('./query.constants');
+const RolesConstants = require('./roles.constants');
+const StatusCodeConstants = require('./status-code.constants');
+const StatusConstants = require('./status.constants');
+const ValidationConstant = require('./validation.constants');
 
 module.exports = Object.freeze({
-  RolesConstants,
-  StatusConstants,
-  LeaveTypeConstants,
-  ValidationConstant,
-  StatusCodeConstants,
-  MessageCodeConstants,
+  DefaultValuesConstants,
   EmailConstants,
-  QueryConstants
+  LeaveTypeConstants,
+  MessageCodeConstants,
+  QueryConstants,
+  RolesConstants,
+  StatusCodeConstants,
+  StatusConstants,
+  ValidationConstant
 });

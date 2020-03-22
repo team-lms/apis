@@ -9,18 +9,17 @@ module.exports = {
   /**
    * Get all Employees
    */
-  getAll: async (req, res) => {
+  getAllEmployees: async (req, res) => {
     try {
-      const reqBody = req.body;
+      const queryFilters = req.queryParams;
       const filters = {
-        search: reqBody.search || QueryConstants.SEARCH,
-        offset: Number(reqBody.offset) || QueryConstants.OFFSET,
-        limit: Number(reqBody.pageNo) || QueryConstants.LIMIT,
-        sortType: reqBody.orderBy || QueryConstants.SORT_TYPE[0],
-        sortBy: reqBody.sortType || QueryConstants.SORT_BY
+        search: queryFilters.search || QueryConstants.SEARCH,
+        offset: Number(queryFilters.offset) || QueryConstants.OFFSET,
+        limit: Number(queryFilters.pageNo) || QueryConstants.LIMIT,
+        sortType: queryFilters.orderBy || QueryConstants.SORT_TYPE[0],
+        sortBy: queryFilters.sortType || QueryConstants.SORT_BY
       };
 
-      // const reqBody = req.body;
       const employees = await UserService.getAllUsers({ role: RolesConstants.EMPLOYEE }, filters);
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
         MessageCodeConstants.EMPLOYEE_FETCHED,

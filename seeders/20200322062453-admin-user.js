@@ -1,6 +1,6 @@
 
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.bulkInsert('Users', [{
+  up: (queryInterface) => queryInterface.bulkInsert('Users', [{
     firstName: 'Admin',
     email: 'admin@lms.com',
     phoneNumber: '9818263904',
@@ -11,5 +11,5 @@ module.exports = {
     createdAt: new Date(),
     updatedAt: new Date()
   }]),
-  down: (queryInterface, Sequelize) => queryInterface.bulkUpdate('Users', null, {})
+  down: (queryInterface) => queryInterface.bulkUpdate('Users', null, {})
 };

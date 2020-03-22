@@ -1,4 +1,8 @@
-const { RolesConstants, StatusConstants } = require('../src/constants');
+const {
+  DefaultValuesConstants,
+  RolesConstants,
+  StatusConstants
+} = require('../src/constants');
 
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Users', {
@@ -61,12 +65,18 @@ module.exports = {
     },
     casualLeaves: {
       type: Sequelize.INTEGER,
+      allowNull: false,
+      defaultValue: DefaultValuesConstants.USER_CASUAL_LEAVES,
     },
     bufferLeaves: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      defaultValue: DefaultValuesConstants.USER_BUFFER_LEAVES
     },
     unAuthorizedLeaves: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      defaultValue: DefaultValuesConstants.USER_UNAUTHORIZED_LEAVES
     },
     createdAt: {
       allowNull: false,

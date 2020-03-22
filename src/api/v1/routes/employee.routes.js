@@ -4,8 +4,6 @@ const { EmployeeController } = require('../controllers');
 
 // router.use(AuthMiddleware.checkAuth);
 
-
-router.post('/get', EmployeeController.getAll);
-router.post('/create', EmployeeController.)
+router.get('/', EmployeeController.getAllEmployees);
 
 module.exports = router;

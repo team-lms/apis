@@ -1,22 +1,27 @@
-const Chalk = require('chalk');
 const bcrypt = require('bcryptjs');
-const pug = require('pug');
+const Chalk = require('chalk');
 const path = require('path');
-
-
+const pug = require('pug');
 const { UserService } = require('../services');
 const {
-  Response, Validator, ApiError, Crypto, Mailer
+  ApiError,
+  Crypto,
+  Mailer,
+  Response,
+  Validator
 } = require('../../../utils');
 const {
-  StatusCodeConstants, ValidationConstant, MessageCodeConstants, RolesConstants
+  MessageCodeConstants,
+  RolesConstants,
+  StatusCodeConstants,
+  ValidationConstant
 } = require('../../../constants');
 
 module.exports = {
   /**
    * To create a user.
    */
-  create: async (req, res) => {
+  createUser: async (req, res) => {
     try {
       const requestBody = req.body;
       const userToBeCreated = {
@@ -42,7 +47,7 @@ module.exports = {
         },
         whatsappNumber: {
           numericality: { onlyInteger: true },
-          length: { is: ValidationConstant.PHONE_NUMBER_LENGTH },
+          length: { is: ValidationConstant.WHATS_APP_NUMBER_LENGTH },
         },
         designation: { presence: { allowEmpty: false } },
         role: { presence: { allowEmpty: false } },
@@ -51,13 +56,12 @@ module.exports = {
         throw new ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR, validationResult);
       }
 
-      // check if a user is present with same email
-      const alreadyUser = await UserService.findUserByEmailOrPhone(
-        {
-          email: userToBeCreated.email,
-          phoneNumber: userToBeCreated.phoneNumber
-        }
-      );
+      // check if a user is present with same email or phone
+      const alreadyUser = await UserService.findUserByEmailOrPhone({
+        email: userToBeCreated.email,
+        phoneNumber: userToBeCreated.phoneNumber
+      });
+
       if (alreadyUser) {
         if (alreadyUser.email === userToBeCreated.email) {
           throw new ApiError.ResourceAlreadyExistError(MessageCodeConstants.EMAIL_ALREADY_EXISTS);
@@ -66,20 +70,18 @@ module.exports = {
           throw new ApiError.ResourceAlreadyExistError(MessageCodeConstants.PHONE_ALREADY_EXISTS);
         }
       }
-      userToBeCreated.role = RolesConstants.EMPLOYEE;
+
       const password = Crypto.randomBytes(4);
+      userToBeCreated.role = RolesConstants.EMPLOYEE;
       userToBeCreated.password = await bcrypt.hash(password, 10);
-      userToBeCreated.casualLeaves = 0;
-      userToBeCreated.bufferLeaves = 0;
-      userToBeCreated.unAuthorizedLeaves = 0;
       const createdUser = await UserService.createUser(userToBeCreated);
       const userName = `${userToBeCreated.firstName || ''} ${userToBeCreated.lastName || ''}`.trim();
 
       (async () => {
-        const html = await pug.renderFile(path.join(__dirname, '../../../templates/create-user.pug'), {
-          userName,
-          password
-        });
+        const html = await pug.renderFile(
+          path.join(__dirname, '../../../templates/create-user.pug'),
+          { userName, password }
+        );
 
         Mailer.sendMail({
           to: createdUser.email,
@@ -87,7 +89,6 @@ module.exports = {
           html
         });
       })();
-
 
       const user = {
         id: createdUser.id,

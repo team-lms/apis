@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
+const Chalk = require('chalk');
 const api = require('./src/api');
 require('dotenv').config();
 
@@ -14,4 +15,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api', api);
 app.get('*', (_, res) => res.status(200).json({ message: 'App is running well' }));
 
-app.listen(3000);
+app.listen(process.env.PORT, () => {
+  Chalk.blue(`App is running on port ${process.env.PORT}`);
+});

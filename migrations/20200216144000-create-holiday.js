@@ -6,39 +6,39 @@ module.exports = {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: Sequelize.INTEGER,
+      type: Sequelize.INTEGER
     },
     title: {
       allowNull: false,
-      type: Sequelize.STRING(1000),
+      type: Sequelize.STRING(1000)
     },
     leaveType: {
       type: Sequelize.ENUM(
         LeaveTypeConstants.FLOATING,
-        LeaveTypeConstants.GENERAL,
-      ),
+        LeaveTypeConstants.GENERAL
+      )
     },
     status: {
       type: Sequelize.ENUM(
         StatusConstants.ACTIVE,
-        StatusConstants.INACTIVE,
-      ),
+        StatusConstants.INACTIVE
+      )
     },
     date: {
       allowNull: false,
-      type: Sequelize.DATE,
+      type: Sequelize.DATE
     },
     createdAt: {
       allowNull: false,
-      type: Sequelize.DATE,
+      type: Sequelize.DATE
     },
     updatedAt: {
       allowNull: false,
-      type: Sequelize.DATE,
+      type: Sequelize.DATE
     },
     deletedAt: {
-      type: Sequelize.DATE,
-    },
+      type: Sequelize.DATE
+    }
   }),
-  down: (queryInterface) => queryInterface.dropTable('Holidays'),
+  down: (queryInterface) => queryInterface.dropTable('Holidays')
 };

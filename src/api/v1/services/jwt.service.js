@@ -31,9 +31,9 @@ const JwtService = {
         unAuthorizedLeaves: user.unAuthorizedLeaves,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt
-      },
+      }
     };
-  },
+  }
 };
 
 module.exports = {

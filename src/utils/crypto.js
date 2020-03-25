@@ -13,7 +13,7 @@ module.exports = {
     let encrypted = cipher.update(text);
     encrypted = Buffer.concat([encrypted, cipher.final()]);
     return `${iv.toString('hex')}.${encrypted.toString('hex')}`;
-  },
+  }
 
   // decrypt: (text) => {
   //   const cipher = crypto.createDecipheriv(

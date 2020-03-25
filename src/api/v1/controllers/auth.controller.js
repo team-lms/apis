@@ -13,21 +13,24 @@ module.exports = {
     try {
       const userToBeLoggedIn = req.body;
       const validationResult = Validator.validate(userToBeLoggedIn, {
-        email: { presence: { allowEmpty: false }, email: true },
-        password: { presence: { allowEmpty: false } },
+        userId: { presence: { allowEmpty: false }, email: true },
+        password: { presence: { allowEmpty: false } }
       });
       if (validationResult) {
-        throw ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR, validationResult);
+        throw new ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR, validationResult);
       }
 
-      const foundUser = await UserService.findUserByEmailOrPhone({ email: userToBeLoggedIn.email });
+      const foundUser = await UserService.findUserByEmailOrPhone({
+        email: userToBeLoggedIn.userId,
+        phoneNumber: userToBeLoggedIn.userId
+      });
       if (foundUser) {
         if (await bcrypt.compare(userToBeLoggedIn.password, foundUser.password)) {
           if (foundUser.status === StatusConstants.ACTIVE) {
             return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
               MessageCodeConstants.USER_FETCHED_SUCCESSFULLY,
               JwtService.generateJwtToken(foundUser),
-              StatusCodeConstants.SUCCESS,
+              StatusCodeConstants.SUCCESS
             ));
           }
           throw new ApiError.ValidationError(MessageCodeConstants.USER_INACTIVE);
@@ -83,13 +86,12 @@ module.exports = {
   },
 
   /**
-   * Verify Otp
+   * Reset user's password
    */
-
-  verifyOtp: async (req, res) => {
+  resetPassword: async (req, res) => {
     try {
-      const userPasswordChange = req.body;
-      const validationResult = Validator.validate({
+      const userDetails = req.body;
+      const validationResult = Validator.validate(userDetails, {
         userId: { presence: { allowEmpty: false } },
         otp: { presence: { allowEmpty: false } },
         password: { presence: { allowEmpty: false } }
@@ -100,26 +102,31 @@ module.exports = {
       }
 
       const foundUser = await UserService.findUserByEmailOrPhone({
-        email: userPasswordChange.userId,
-        phoneNumber: userPasswordChange.userId
+        email: userDetails.userId,
+        phoneNumber: userDetails.userId
       });
+
       if (foundUser) {
         const foundOtp = await OtpService.getOtpByUserId(foundUser);
-        if (foundOtp && `${foundOtp.otp}` === `${userPasswordChange.otp}`) {
+        if (foundOtp && `${foundOtp.otp}` === `${userDetails.otp}`) {
           const otpDuration = moment.utc().diff(moment.utc(foundOtp.createdAt), 'minute');
           if (otpDuration <= Number(process.env.OTP_DURATION)) {
-            userPasswordChange.password = await bcrypt.hash(userPasswordChange.password, 10);
-            await UserService.updateUser({ password: userPasswordChange.password }, { id: foundUser.id });
+            userDetails.password = await bcrypt.hash(userDetails.password, 10);
+            await UserService.updateUser(
+              { password: userDetails.password },
+              { id: foundUser.id }
+            );
             return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
               MessageCodeConstants.PASSWORD_UPDATED_SUCCESSFULLY,
               {},
               StatusCodeConstants.SUCCESS
             ));
           }
-          throw new ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR,
-            MessageCodeConstants.OTP_EXPIRED);
-        } throw new ApiError.ValidationError(MessageCodeConstants);
-      } throw new ApiError.ValidationError(MessageCodeConstants.USER_NOT_FOUND);
+          throw new ApiError.ValidationError(MessageCodeConstants.OTP_EXPIRED);
+        }
+        throw new ApiError.ValidationError(MessageCodeConstants.OTP_DO_NOT_MATCH);
+      }
+      throw new ApiError.ValidationError(MessageCodeConstants.USER_NOT_FOUND);
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       return res.status(code).json({
         message,

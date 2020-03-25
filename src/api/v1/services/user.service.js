@@ -6,7 +6,7 @@ const { Op } = Sequelize;
 const UserService = {
 
   createUser: async (userToBeCreated) => User.create(
-    userToBeCreated,
+    userToBeCreated
   ),
   findUserByEmailOrPhone: async ({ email, phoneNumber }, userId = null) => {
     if (!email && !phoneNumber) {
@@ -16,16 +16,16 @@ const UserService = {
       where: {
         [Op.or]: [
           { ...(email && { email }) },
-          { ...(phoneNumber && { phoneNumber }) },
+          { ...(phoneNumber && { phoneNumber }) }
         ],
         ...(userId && {
           id: {
-            [Op.ne]: userId,
-          },
-        }),
+            [Op.ne]: userId
+          }
+        })
       },
       paranoid: false,
-      attributes: { exclude: ['deletedAt'] },
+      attributes: { exclude: ['deletedAt'] }
     });
   },
 
@@ -33,7 +33,7 @@ const UserService = {
     { where: { id } }),
 
   getAllUsers: async ({ role }, {
-    search, offset, limit, sortBy, sortType
+    offset, limit, sortBy, sortType
   }) => User.findAndCountAll({
     attributes: { exclude: ['deviceToken', 'appVersion', 'password', 'createdAt', 'updatedAt', 'deletedAt'] },
     where: { role },
@@ -44,5 +44,5 @@ const UserService = {
 
 };
 module.exports = {
-  UserService,
+  UserService
 };

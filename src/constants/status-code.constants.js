@@ -6,6 +6,6 @@ module.exports = Object.freeze({
   BAD_REQUEST: 400,
   UN_PROCESSABLE_ENTITY: 422,
   UNAUTHORIZED: 401,
-  RESOURCE_EXISTS: 409,
+  RESOURCE_EXISTS: 409
 
 });

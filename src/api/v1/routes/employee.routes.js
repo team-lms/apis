@@ -5,6 +5,6 @@ const { EmployeeController } = require('../controllers');
 // router.use(AuthMiddleware.checkAuth);
 
 router.get('/', EmployeeController.getAllEmployees);
-router.patch('/:id', EmployeeController.editEmployee);
+router.patch('/:id', EmployeeController.updatedEmployee);
 
 module.exports = router;

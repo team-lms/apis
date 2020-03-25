@@ -4,7 +4,7 @@ const response = {
   success: false,
   message: '',
   data: {},
-  responseCode: 200,
+  responseCode: 200
 };
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
       ...response,
       message,
       data,
-      responseCode,
+      responseCode
     };
   },
 
@@ -36,7 +36,7 @@ module.exports = {
       message,
       data,
       responseCode,
-      success: true,
+      success: true
     };
-  },
+  }
 };

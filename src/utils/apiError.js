@@ -26,5 +26,5 @@ class ValidationError extends ApiError {
 
 module.exports = {
   ValidationError,
-  ResourceAlreadyExistError,
+  ResourceAlreadyExistError
 };

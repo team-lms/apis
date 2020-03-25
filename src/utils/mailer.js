@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 
 module.exports = {
   sendMail: async ({
-    to, subject, html,
+    to, subject, html
   }) => {
     try {
       const transporter = nodemailer.createTransport({
@@ -11,17 +11,17 @@ module.exports = {
         secureConnection: process.env.SMTP_SECURE_CONNECTION,
         auth: {
           user: process.env.SMTP_USER_NAME,
-          pass: process.env.SMTP_PASSWORD,
-        },
+          pass: process.env.SMTP_PASSWORD
+        }
       });
       return transporter.sendMail({
         from: process.env.SMTP_USER_NAME,
         to,
         subject,
-        html,
+        html
       });
     } catch (error) {
       return error;
     }
-  },
+  }
 };

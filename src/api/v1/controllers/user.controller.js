@@ -42,14 +42,14 @@ module.exports = {
         phoneNumber: {
           presence: { allowEmpty: false },
           numericality: { onlyInteger: true },
-          length: { is: ValidationConstant.PHONE_NUMBER_LENGTH },
+          length: { is: ValidationConstant.PHONE_NUMBER_LENGTH }
         },
         whatsappNumber: {
           numericality: { onlyInteger: true },
-          length: { is: ValidationConstant.WHATS_APP_NUMBER_LENGTH },
+          length: { is: ValidationConstant.WHATS_APP_NUMBER_LENGTH }
         },
         designation: { presence: { allowEmpty: false } },
-        role: { presence: { allowEmpty: false } },
+        role: { presence: { allowEmpty: false } }
       });
       if (validationResult) {
         throw new ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR, validationResult);
@@ -100,22 +100,22 @@ module.exports = {
         role: createdUser.role,
         status: createdUser.status,
         createdAt: createdUser.createdAt,
-        updatedAt: createdUser.updatedAt,
+        updatedAt: createdUser.updatedAt
       };
 
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
         MessageCodeConstants.USER_CREATED_SUCCESSFULLY,
         { user },
-        StatusCodeConstants.SUCCESS,
+        StatusCodeConstants.SUCCESS
       ));
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       Chalk.red(error);
       return res.status(code).json(Response.sendError(
         message,
         error,
-        code,
+        code
       ));
     }
-  },
+  }
 
 };

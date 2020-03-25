@@ -44,25 +44,27 @@ module.exports = {
     }
   },
 
-  editEmployee: async (req, res) => {
+  /**
+   * Update the employee
+   */
+  updatedEmployee: async (req, res) => {
     try {
-      const editEmployeeBody = req.body;
-      const userId = req.params.id;
-      const employeeToBeEdited = {
-        ...(editEmployeeBody.firstName && { firstName: editEmployeeBody.firstName }),
-        ...(editEmployeeBody.lastName && { lastName: editEmployeeBody.lastName }),
-        ...(editEmployeeBody.email && { email: editEmployeeBody.email }),
-        ...(editEmployeeBody.phoneNumber && { phoneNumber: editEmployeeBody.phoneNumber }),
-        ...(editEmployeeBody.whatsappNumber && { whatsappNumber: editEmployeeBody.whatsappNumber }),
-        ...(editEmployeeBody.designation && { designation: editEmployeeBody.designation }),
-        ...(editEmployeeBody.role && { role: editEmployeeBody.role }),
-        ...(editEmployeeBody.status && { status: editEmployeeBody.status }),
+      const reqBody = req.body;
+      const { id: userId } = req.params;
+      const employeeToBeUpdated = {
+        ...(!!reqBody.firstName && { firstName: reqBody.firstName }),
+        ...(!!reqBody.lastName && { lastName: reqBody.lastName }),
+        ...(!!reqBody.email && { email: reqBody.email }),
+        ...(!!reqBody.phoneNumber && { phoneNumber: reqBody.phoneNumber }),
+        ...(!!reqBody.whatsappNumber && { whatsappNumber: reqBody.whatsappNumber }),
+        ...(!!reqBody.designation && { designation: reqBody.designation }),
+        ...(!!reqBody.role && { role: reqBody.role }),
+        ...(!!reqBody.status && { status: reqBody.status })
       };
-      const validationResult = Validator.validate(employeeToBeEdited, {
-        // firstName: { presence: { allowEmpty: false } },
+
+      const validationResult = Validator.validate(employeeToBeUpdated, {
         email: { presence: { allowEmpty: false }, email: true },
         phoneNumber: {
-          presence: { allowEmpty: false },
           numericality: { onlyInteger: true },
           length: { is: ValidationConstant.WHATS_APP_NUMBER_LENGTH }
         },
@@ -73,17 +75,27 @@ module.exports = {
         designation: { presence: { allowEmpty: false } },
         role: { presence: { allowEmpty: false } }
       });
+
       if (validationResult) {
         throw new ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR, validationResult);
       }
+
+      // check if any other user is present with same email or phone
       const foundUser = await UserService.findUserByEmailOrPhone({
-        email: employeeToBeEdited.email,
-        phoneNumber: employeeToBeEdited.phoneNumber
-      }, userId);
+        email: employeeToBeUpdated.email,
+        phoneNumber: employeeToBeUpdated.phoneNumber
+      });
+
       if (foundUser) {
-        throw new ApiError.ResourceAlreadyExistError(MessageCodeConstants.ALREADY_EXISTS);
+        if (foundUser.email === employeeToBeUpdated.email) {
+          throw new ApiError.ResourceAlreadyExistError(MessageCodeConstants.EMAIL_ALREADY_EXISTS);
+        }
+        if (foundUser.phoneNumber === employeeToBeUpdated.phoneNumber) {
+          throw new ApiError.ResourceAlreadyExistError(MessageCodeConstants.PHONE_ALREADY_EXISTS);
+        }
       }
-      const updatedUser = await UserService.updateUser(employeeToBeEdited, userId);
+
+      const updatedUser = await UserService.updateUser(employeeToBeUpdated, userId);
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
         MessageCodeConstants.EMPLOYEE.EMPLOYEE_UPDATED,
         updatedUser,

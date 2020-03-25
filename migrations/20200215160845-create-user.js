@@ -54,7 +54,7 @@ module.exports = {
         RolesConstants.SUPERVISOR,
         RolesConstants.HR,
         RolesConstants.EMPLOYEE
-      ),
+      )
     },
     status: {
       allowNull: false,
@@ -66,7 +66,7 @@ module.exports = {
     casualLeaves: {
       type: Sequelize.INTEGER,
       allowNull: false,
-      defaultValue: DefaultValuesConstants.USER_CASUAL_LEAVES,
+      defaultValue: DefaultValuesConstants.USER_CASUAL_LEAVES
     },
     bufferLeaves: {
       type: Sequelize.INTEGER,

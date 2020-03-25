@@ -29,10 +29,8 @@ const UserService = {
     });
   },
 
-  updateUser: async ({ password }, { id }) => User.update(
-    { password },
-    { where: { id } }
-  ),
+  updateUser: async (updatedUser, id) => User.update(updatedUser,
+    { where: { id } }),
 
   getAllUsers: async ({ role }, {
     search, offset, limit, sortBy, sortType

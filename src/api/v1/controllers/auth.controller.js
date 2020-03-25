@@ -109,7 +109,7 @@ module.exports = {
           const otpDuration = moment.utc().diff(moment.utc(foundOtp.createdAt), 'minute');
           if (otpDuration <= Number(process.env.OTP_DURATION)) {
             userPasswordChange.password = await bcrypt.hash(userPasswordChange.password, 10);
-            await UserService.updateUser(userPasswordChange, foundUser);
+            await UserService.updateUser({ password: userPasswordChange.password }, { id: foundUser.id });
             return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
               MessageCodeConstants.PASSWORD_UPDATED_SUCCESSFULLY,
               {},

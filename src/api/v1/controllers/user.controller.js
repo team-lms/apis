@@ -12,7 +12,6 @@ const {
 } = require('../../../utils');
 const {
   MessageCodeConstants,
-  RolesConstants,
   StatusCodeConstants,
   ValidationConstant
 } = require('../../../constants');
@@ -72,7 +71,6 @@ module.exports = {
       }
 
       const password = Crypto.randomBytes(4);
-      userToBeCreated.role = RolesConstants.EMPLOYEE;
       userToBeCreated.password = await bcrypt.hash(password, 10);
       const createdUser = await UserService.createUser(userToBeCreated);
       const userName = `${userToBeCreated.firstName || ''} ${userToBeCreated.lastName || ''}`.trim();

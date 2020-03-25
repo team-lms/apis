@@ -29,8 +29,10 @@ const UserService = {
     });
   },
 
-  updateUser: async (updatedUser, id) => User.update(updatedUser,
-    { where: { id } }),
+  updateUser: async (updatedUser, id) => User.update(
+    updatedUser,
+    { where: { id } }
+  ),
 
   getAllUsers: async ({ role }, {
     offset, limit, sortBy, sortType

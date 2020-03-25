@@ -114,7 +114,7 @@ module.exports = {
             userDetails.password = await bcrypt.hash(userDetails.password, 10);
             await UserService.updateUser(
               { password: userDetails.password },
-              { id: foundUser.id }
+              foundUser.id
             );
             return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
               MessageCodeConstants.PASSWORD_UPDATED_SUCCESSFULLY,

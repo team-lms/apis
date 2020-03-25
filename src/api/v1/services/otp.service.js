@@ -2,12 +2,12 @@ const pug = require('pug');
 const path = require('path');
 const { Otp } = require('../../../../models');
 const { StatusConstants, EmailConstants } = require('../../../constants');
-const { Otps, Mailer } = require('../../../utils');
+const { Otp: OtpUtil, Mailer } = require('../../../utils');
 
 const OtpService = {
 
   sendOtp: async (user) => {
-    const randomOtp = Otps.generateOtp();
+    const randomOtp = OtpUtil.generateOtp();
     await Otp.update(
       { status: StatusConstants.INACTIVE },
       { where: { userId: user.id, status: StatusConstants.ACTIVE } }

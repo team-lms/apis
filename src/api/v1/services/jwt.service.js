@@ -36,6 +36,4 @@ const JwtService = {
   }
 };
 
-module.exports = {
-  JwtService
-};
+module.exports = JwtService;

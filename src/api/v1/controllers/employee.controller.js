@@ -52,14 +52,14 @@ module.exports = {
       const reqBody = req.body;
       const { id: userId } = req.params;
       const employeeToBeUpdated = {
-        ...(!!reqBody.firstName && { firstName: reqBody.firstName }),
-        ...(!!reqBody.lastName && { lastName: reqBody.lastName }),
-        ...(!!reqBody.email && { email: reqBody.email }),
-        ...(!!reqBody.phoneNumber && { phoneNumber: reqBody.phoneNumber }),
-        ...(!!reqBody.whatsappNumber && { whatsappNumber: reqBody.whatsappNumber }),
-        ...(!!reqBody.designation && { designation: reqBody.designation }),
-        ...(!!reqBody.role && { role: reqBody.role }),
-        ...(!!reqBody.status && { status: reqBody.status })
+        ...(reqBody.firstName && { firstName: reqBody.firstName }),
+        ...(reqBody.lastName && { lastName: reqBody.lastName }),
+        ...(reqBody.email && { email: reqBody.email }),
+        ...(reqBody.phoneNumber && { phoneNumber: reqBody.phoneNumber }),
+        ...(reqBody.whatsappNumber && { whatsappNumber: reqBody.whatsappNumber }),
+        ...(reqBody.designation && { designation: reqBody.designation }),
+        ...(reqBody.role && { role: reqBody.role }),
+        ...(reqBody.status && { status: reqBody.status })
       };
 
       const validationResult = Validator.validate(employeeToBeUpdated, {
@@ -84,7 +84,7 @@ module.exports = {
       const foundUser = await UserService.findUserByEmailOrPhone({
         email: employeeToBeUpdated.email,
         phoneNumber: employeeToBeUpdated.phoneNumber
-      });
+      }, userId);
 
       if (foundUser) {
         if (foundUser.email === employeeToBeUpdated.email) {
@@ -95,7 +95,7 @@ module.exports = {
         }
       }
 
-      const updatedUser = await UserService.updateUser(employeeToBeUpdated, userId);
+      const updatedUser = await UserService.updateUserById(employeeToBeUpdated, userId);
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
         MessageCodeConstants.EMPLOYEE.EMPLOYEE_UPDATED,
         updatedUser,

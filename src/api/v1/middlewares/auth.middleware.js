@@ -7,8 +7,6 @@ module.exports = {
     try {
       const token = req.headers.authorization.split(' ').pop().trim();
       const { data: hashInfo } = jwt.verify(token, process.env.JWT_SECRET_KEY);
-      console.log(hashInfo);
-
 
       next();
       return token;

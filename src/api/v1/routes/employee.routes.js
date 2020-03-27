@@ -6,5 +6,6 @@ const { EmployeeController } = require('../controllers');
 
 router.get('/', EmployeeController.getAllEmployees);
 router.patch('/:id', EmployeeController.updatedEmployee);
+router.delete('/:id', EmployeeController.deleteEmployee);
 
 module.exports = router;

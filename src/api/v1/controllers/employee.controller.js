@@ -108,6 +108,24 @@ module.exports = {
         code
       ));
     }
+  },
+
+  deleteEmployee: async (req, res) => {
+    try {
+      const { id: userId } = req.params;
+      await UserService.deleteUserById(userId);
+      return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+        MessageCodeConstants.EMPLOYEE.EMPLOYEE_DELETED,
+        {},
+        StatusCodeConstants.SUCCESS
+      ));
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      return res.status(code).json(Response.sendError(
+        message,
+        error,
+        code
+      ));
+    }
   }
 
 };

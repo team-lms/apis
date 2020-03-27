@@ -72,6 +72,10 @@ const UserService = {
     order: [[sortBy, sortType]],
     offset,
     limit
+  }),
+
+  deleteUserById: async (id, transaction = null) => User.destroy({
+    where: { id }, ...(transaction && { transaction })
   })
 
 };

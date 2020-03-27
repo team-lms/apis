@@ -17,6 +17,7 @@ module.exports = Object.freeze({
   EMPLOYEE_FETCHED: 'Employee Fetched Successfully',
   EMPLOYEE_CREATED: 'Employee Created Successfully',
   EMPLOYEE: {
-    EMPLOYEE_UPDATED: 'Employee has been updated Successfully'
+    EMPLOYEE_UPDATED: 'Employee has been updated Successfully',
+    EMPLOYEE_DELETED: 'Employee has been deleted Successfully'
   }
 });

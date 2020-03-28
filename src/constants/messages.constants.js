@@ -19,5 +19,9 @@ module.exports = Object.freeze({
   EMPLOYEE: {
     EMPLOYEE_UPDATED: 'Employee has been updated Successfully',
     EMPLOYEE_DELETED: 'Employee has been deleted Successfully'
+  },
+  SUPERVISOR: {
+    SUPERVISOR_FETCHED: 'Supervisors has been fetched Successfully',
+    SUPERVISOR_UPDATED: 'Supervisor has been updated Successfully'
   }
 });

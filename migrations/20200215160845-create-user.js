@@ -63,6 +63,14 @@ module.exports = {
         StatusConstants.INACTIVE
       )
     },
+    employeeId: {
+      unique: true,
+      allowNull: false,
+      type: Sequelize.STRING
+    },
+    profilePicture: {
+      type: Sequelize.STRING(100)
+    },
     casualLeaves: {
       type: Sequelize.INTEGER,
       allowNull: false,

@@ -64,6 +64,14 @@ module.exports = (sequelize, DataTypes) => {
       ),
       defaultValue: StatusConstants.INACTIVE
     },
+    employeeId: {
+      unique: true,
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+    profilePicture: {
+      type: DataTypes.STRING(100)
+    },
     casualLeaves: {
       type: DataTypes.INTEGER,
       allowNull: false,

@@ -96,10 +96,10 @@ module.exports = {
         }
       }
 
-      const updatedUser = await UserService.updateUserById(employeeToBeUpdated, userId);
+      await UserService.updateUserById(employeeToBeUpdated, userId);
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
         MessageCodeConstants.EMPLOYEE.EMPLOYEE_UPDATED,
-        updatedUser,
+        {},
         StatusCodeConstants.SUCCESS
       ));
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {

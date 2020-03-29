@@ -82,11 +82,10 @@ module.exports = {
           throw new ApiError.ResourceAlreadyExistError(MessageCodeConstants.PHONE_ALREADY_EXISTS);
         }
       }
-
-      const updatedSupervisor = await UserService.updateUserById(supervisorToBeUpdated, userId);
+      await UserService.updateUserById(supervisorToBeUpdated, userId);
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
         MessageCodeConstants.SUPERVISOR_UPDATED,
-        updatedSupervisor,
+        supervisorToBeUpdated,
         StatusCodeConstants.SUCCESS
       ));
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
@@ -94,6 +93,27 @@ module.exports = {
         message,
         error,
         code
+      ));
+    }
+  },
+  /**
+   * Delete Supervisor by Id
+   */
+
+  deleteSupervisorById: async (req, res) => {
+    try {
+      const { id: userId } = req.params;
+      await UserService.deleteUserById(userId);
+      return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+        MessageCodeConstants.SUPERVISOR_DELETED,
+        {},
+        StatusCodeConstants.SUCCESS
+      ));
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      return res.send(code).json(Response.sendError(
+        message,
+        code,
+        error
       ));
     }
   }

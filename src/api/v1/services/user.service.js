@@ -38,8 +38,10 @@ const UserService = {
 
   updateUserById: async (updatedUser, id, transaction = null) => User.update(
     updatedUser,
-    { where: { id }, ...(transaction && { transaction }) }
-
+    {
+      where: { id },
+      ...(transaction && { transaction })
+    }
   ),
 
   resetPassword: async (password, id, foundOtp) => {

@@ -22,6 +22,10 @@ module.exports = Object.freeze({
   },
   SUPERVISOR: {
     SUPERVISOR_FETCHED: 'Supervisors has been fetched Successfully',
-    SUPERVISOR_UPDATED: 'Supervisor has been updated Successfully'
+    SUPERVISOR_UPDATED: 'Supervisor has been updated Successfully',
+    SUPERVISOR_DELETED: 'Supervisor has been deleted Successfully'
+  },
+  HUMAN_RESOURCE: {
+    HUMAN_RESOURCE_FETCHED: 'Human Resource Managers has been fetched Successfully '
   }
 });

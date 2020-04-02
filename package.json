@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "eslint --ignore-path .gitignore . --fix"
+    "lint": "eslint --ignore-pattern .gitignore '**/*.js' --fix"
   },
   "repository": {
     "type": "git",

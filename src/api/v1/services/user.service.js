@@ -12,9 +12,16 @@ const { Op } = Sequelize;
 
 const UserService = {
 
+  /**
+   * Create new user
+   */
   createUser: async (userToBeCreated) => User.create(
     userToBeCreated
   ),
+
+  /**
+   * Find user by email or phone
+   */
   findUserByEmailOrPhone: async ({ email, phoneNumber }, userId = null) => {
     if (!email && !phoneNumber) {
       return null;
@@ -25,17 +32,16 @@ const UserService = {
           { ...(email && { email }) },
           { ...(phoneNumber && { phoneNumber }) }
         ],
-        ...(userId && {
-          id: {
-            [Op.ne]: userId
-          }
-        })
+        ...(userId && { id: { [Op.ne]: userId } })
       },
       paranoid: false,
       attributes: { exclude: ['deletedAt'] }
     });
   },
 
+  /**
+   * Update user by user id
+   */
   updateUserById: async (updatedUser, id, transaction = null) => User.update(
     updatedUser,
     {
@@ -44,6 +50,9 @@ const UserService = {
     }
   ),
 
+  /**
+   * Reset user password
+   */
   resetPassword: async (password, id, foundOtp) => {
     const transaction = await sequelize.transaction();
     try {

@@ -35,7 +35,6 @@ const OtpService = {
   updateOtpById: async (id, updatedOtp, transaction = null) => Otp.update(
     updatedOtp,
     { where: { id }, ...(transaction && { transaction }) }
-
   ),
 
   getOtpByUserId: async ({ id }) => Otp.findOne({

@@ -39,6 +39,9 @@ const UserService = {
     });
   },
 
+  countUsers: async (role = null) => User.count({
+  }),
+
   /**
    * Update user by user id
    */
@@ -75,7 +78,7 @@ const UserService = {
   getAllUsers: async ({ role }, {
     offset, limit, sortBy, sortType
   }) => User.findAndCountAll({
-    attributes: { exclude: ['deviceToken', 'appVersion', 'password', 'createdAt', 'updatedAt', 'deletedAt'] },
+    attributes: { exclude: ['deviceToken', 'appVersion', 'password', 'updatedAt', 'deletedAt'] },
     where: {
       role,
       status: StatusConstants.ACTIVE

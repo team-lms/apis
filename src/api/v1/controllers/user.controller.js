@@ -69,6 +69,9 @@ module.exports = {
           throw new ApiError.ResourceAlreadyExistError(MessageCodeConstants.PHONE_ALREADY_EXISTS);
         }
       }
+      const count = Number(await UserService.countUsers());
+      const employeeId = `${process.env.EMPLOYEE_ID} ' '${count + 1}`;
+      userToBeCreated.employeeId = employeeId;
 
       const password = Crypto.randomBytes(4);
       userToBeCreated.password = await bcrypt.hash(password, 10);

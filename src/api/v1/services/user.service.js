@@ -1,14 +1,8 @@
-const Sequelize = require('sequelize');
+const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
-const {
-  User,
-  sequelize
-} = require('../../../../models');
-
+const { User, sequelize } = require('../../../../models');
 const OtpService = require('./otp.service');
 const { StatusConstants } = require('../../../constants');
-
-const { Op } = Sequelize;
 
 const UserService = {
 
@@ -39,8 +33,10 @@ const UserService = {
     });
   },
 
-  countUsers: async (role = null) => User.count({
-  }),
+  /**
+   * Count all users
+   */
+  countUsers: async () => User.count(),
 
   /**
    * Update user by user id
@@ -75,6 +71,9 @@ const UserService = {
     }
   },
 
+  /**
+   * Get all the users
+   */
   getAllUsers: async ({ role }, {
     offset, limit, sortBy, sortType
   }) => User.findAndCountAll({
@@ -88,6 +87,9 @@ const UserService = {
     limit
   }),
 
+  /**
+   * Delete user by user id
+   */
   deleteUserById: async (id, transaction = null) => User.destroy({
     where: { id }, ...(transaction && { transaction })
   })

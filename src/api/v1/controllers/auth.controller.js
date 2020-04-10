@@ -107,7 +107,7 @@ module.exports = {
       });
 
       if (foundUser) {
-        const foundOtp = await OtpService.getOtpByUserId(foundUser);
+        const foundOtp = await OtpService.getOtpByUserId(foundUser.id);
         if (foundOtp && `${foundOtp.otp}` === `${userDetails.otp}`) {
           const otpDuration = moment.utc().diff(moment.utc(foundOtp.createdAt), 'minute');
           if (otpDuration <= Number(process.env.OTP_DURATION)) {

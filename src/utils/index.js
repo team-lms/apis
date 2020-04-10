@@ -1,15 +1,15 @@
-const Validator = require('./validator');
-const Crypto = require('./crypto');
 const ApiError = require('./apiError');
-const Response = require('./response');
+const Crypto = require('./crypto');
 const Mailer = require('./mailer');
 const Otp = require('./otp');
+const Response = require('./response');
+const Validator = require('./validator');
 
 module.exports = {
-  Validator,
   ApiError,
   Crypto,
-  Response,
   Mailer,
-  Otp
+  Otp,
+  Response,
+  Validator
 };

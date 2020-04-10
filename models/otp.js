@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         StatusConstants.INACTIVE
       )
     }
-  }, {});
+  });
   Otp.associate = (models) => {
     Otp.belongsTo(models.User, { as: 'user', foreignKey: 'userId', foreignKeyConstraint: true });
   };

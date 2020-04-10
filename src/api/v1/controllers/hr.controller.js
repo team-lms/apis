@@ -1,20 +1,22 @@
+const { Response } = require('../../../utils');
+const { UserService } = require('../services');
 const {
-  StatusCodeConstants,
+  MessageCodeConstants,
   QueryConstants,
   RolesConstants,
-  MessageCodeConstants
+  StatusCodeConstants
 } = require('../../../constants');
-const {
-  Response
-} = require('../../../utils');
-const { UserService } = require('../services');
 
 module.exports = {
+
+  /**
+   * Get all HR managers
+   */
   getAllHumanResources: async (req, res) => {
     try {
       const queryFilters = req.params;
       const filters = {
-        search: (queryFilters.search) || QueryConstants.SEARCH,
+        search: queryFilters.search || QueryConstants.SEARCH,
         offset: Number(queryFilters.offset) || QueryConstants.OFFSET,
         limit: Number(queryFilters.limit) || QueryConstants.LIMIT,
         sortType: queryFilters.sortType || QueryConstants.SORT_TYPE[0],

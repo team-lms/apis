@@ -27,5 +27,11 @@ module.exports = Object.freeze({
   },
   HUMAN_RESOURCE: {
     HUMAN_RESOURCE_FETCHED: 'Human Resource Managers has been fetched Successfully '
+  },
+  TEAM: {
+    TEAMS_FETCHED: 'Teams Fetched Successfully',
+    TEAM_ALREADY_EXISTS: 'Team Already Exists',
+    TEAM_CREATED_SUCCESSFULLY: 'Team Created Successfully'
   }
+
 });

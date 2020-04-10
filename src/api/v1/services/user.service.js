@@ -72,8 +72,9 @@ const UserService = {
   },
 
   /**
-   * Get all the users
+   * Get All Users based on their Roles
    */
+
   getAllUsers: async ({ role }, {
     offset, limit, sortBy, sortType
   }) => User.findAndCountAll({
@@ -88,7 +89,7 @@ const UserService = {
   }),
 
   /**
-   * Delete user by user id
+   * Delete User By Id
    */
   deleteUserById: async (id, transaction = null) => User.destroy({
     where: { id }, ...(transaction && { transaction })

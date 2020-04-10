@@ -13,13 +13,16 @@ const {
 const { UserService } = require('../services');
 
 module.exports = {
+  /**
+   * Get Supervisor List
+   */
   getAllSuperVisors: async (req, res) => {
     try {
       const queryFilters = req.params;
       const filters = {
         search: (queryFilters.search) || (QueryConstants.SEARCH),
         offset: Number(queryFilters.offset) || (QueryConstants.OFFSET),
-        limit: Number(queryFilters.pageNo) || (QueryConstants.LIMIT),
+        limit: Number(queryFilters.limit) || (QueryConstants.LIMIT),
         sortType: (queryFilters.sortType) || (QueryConstants.SORT_TYPE[0]),
         sortBy: (queryFilters.sortField) || (QueryConstants.SORT_BY)
       };

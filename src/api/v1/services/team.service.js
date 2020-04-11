@@ -1,19 +1,12 @@
-const Sequelize = require('sequelize');
-const {
-  Team,
-  sequelize
-} = require('../../../../models');
+const { Team, sequelize } = require('../../../../models');
 const TeamAssociationsService = require('./teamAssociations');
 
-
-const { Op } = Sequelize;
 
 const TeamsService = {
 
   /**
    * Get Team List
    */
-
   getAllTeams: async ({
     offset, limit, sortBy, sortType
   }) => Team.findAndCountAll({
@@ -23,10 +16,10 @@ const TeamsService = {
     paranoid: false
   }),
 
+
   /**
    * Find Team by Team Name
    */
-
   findTeamByTeamName: async (teamName) => {
     if (!teamName) {
       return null;

@@ -43,10 +43,7 @@ const UserService = {
    */
   updateUserById: async (updatedUser, id, transaction = null) => User.update(
     updatedUser,
-    {
-      where: { id },
-      ...(transaction && { transaction })
-    }
+    { where: { id }, ...(transaction && { transaction }) }
   ),
 
   /**
@@ -74,7 +71,6 @@ const UserService = {
   /**
    * Get All Users based on their Roles
    */
-
   getAllUsers: async ({ role }, {
     offset, limit, sortBy, sortType
   }) => User.findAndCountAll({

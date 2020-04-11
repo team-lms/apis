@@ -13,7 +13,8 @@ const {
 const {
   MessageCodeConstants,
   StatusCodeConstants,
-  ValidationConstant
+  ValidationConstant,
+  RolesConstants
 } = require('../../../constants');
 
 const { CloudinaryHelper } = require('../helpers');
@@ -51,7 +52,13 @@ module.exports = {
           length: { is: ValidationConstant.WHATS_APP_NUMBER_LENGTH }
         },
         designation: { presence: { allowEmpty: false } },
-        role: { presence: { allowEmpty: false } }
+        role: {
+          presence: { allowEmpty: false },
+          inclusion: {
+            within: Object.keys(RolesConstants).map((key) => RolesConstants[key]),
+            message: MessageCodeConstants.IS_NOT_VALID
+          }
+        }
       });
       if (validationResult) {
         throw new ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR, validationResult);

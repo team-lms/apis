@@ -4,6 +4,7 @@ module.exports = Object.freeze({
   ALREADY_EXISTS: 'Resource already exists',
   EMAIL_ALREADY_EXISTS: 'Email already exists',
   PHONE_ALREADY_EXISTS: 'Phone number already exists',
+  IS_NOT_VALID: 'is not valid',
   USER_CREATED_SUCCESSFULLY: 'User created successfully',
   USER_NOT_FOUND: 'User not found',
   PASSWORD_INCORRECT: 'Passwords did not match',

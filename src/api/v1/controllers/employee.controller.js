@@ -3,15 +3,11 @@ const {
   StatusCodeConstants,
   MessageCodeConstants,
   RolesConstants,
-  QueryConstants,
-  ValidationConstant
+  QueryConstants
 } = require('../../../constants');
-const {
-  Response,
-  Validator,
-  ApiError
-} = require('../../../utils');
+const { Response } = require('../../../utils');
 const { UserService } = require('../services');
+const { UserHelper } = require('../helpers');
 
 module.exports = {
   /**
@@ -21,7 +17,7 @@ module.exports = {
     try {
       const queryFilters = req.params;
       const filters = {
-        search: (queryFilters.search) || (QueryConstants.SEARCH),
+        search: queryFilters.search || (QueryConstants.SEARCH),
         offset: Number(queryFilters.offset) || QueryConstants.OFFSET,
         limit: Number(queryFilters.pageNo) || QueryConstants.LIMIT,
         sortType: queryFilters.orderBy || QueryConstants.SORT_TYPE[0],
@@ -47,61 +43,17 @@ module.exports = {
   /**
    * Update the employee By Id
    */
-  updatedEmployee: async (req, res) => {
+  updateEmployee: async (req, res) => {
     try {
-      const reqBody = req.body;
-      const { id: userId } = req.params;
-      const employeeToBeUpdated = {
-        ...(reqBody.firstName && { firstName: reqBody.firstName }),
-        ...(reqBody.lastName && { lastName: reqBody.lastName }),
-        ...(reqBody.email && { email: reqBody.email }),
-        ...(reqBody.phoneNumber && { phoneNumber: reqBody.phoneNumber }),
-        ...(reqBody.whatsappNumber && { whatsappNumber: reqBody.whatsappNumber }),
-        ...(reqBody.designation && { designation: reqBody.designation }),
-        ...(reqBody.role && { role: reqBody.role }),
-        ...(reqBody.status && { status: reqBody.status })
-      };
-
-      const validationResult = Validator.validate(employeeToBeUpdated, {
-        email: { presence: { allowEmpty: false }, email: true },
-        phoneNumber: {
-          presence: { allowEmpty: false },
-          numericality: { onlyInteger: true },
-          length: { is: ValidationConstant.WHATS_APP_NUMBER_LENGTH }
-        },
-        whatsappNumber: {
-          numericality: { onlyInteger: true },
-          length: { is: ValidationConstant.WHATS_APP_NUMBER_LENGTH }
-        },
-        designation: { presence: { allowEmpty: false } },
-        role: { presence: { allowEmpty: false } }
-      });
-
-      if (validationResult) {
-        throw new ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR, validationResult);
+      const result = await UserHelper.updateUser(req);
+      if (result && result.success) {
+        return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+          MessageCodeConstants.EMPLOYEE.EMPLOYEE_UPDATED,
+          {},
+          StatusCodeConstants.SUCCESS
+        ));
       }
-
-      // check if any other user is present with same email or phone
-      const foundUser = await UserService.findUserByEmailOrPhone({
-        email: employeeToBeUpdated.email,
-        phoneNumber: employeeToBeUpdated.phoneNumber
-      }, userId);
-
-      if (foundUser) {
-        if (foundUser.email === employeeToBeUpdated.email) {
-          throw new ApiError.ResourceAlreadyExistError(MessageCodeConstants.EMAIL_ALREADY_EXISTS);
-        }
-        if (foundUser.phoneNumber === employeeToBeUpdated.phoneNumber) {
-          throw new ApiError.ResourceAlreadyExistError(MessageCodeConstants.PHONE_ALREADY_EXISTS);
-        }
-      }
-
-      await UserService.updateUserById(employeeToBeUpdated, userId);
-      return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
-        MessageCodeConstants.EMPLOYEE.EMPLOYEE_UPDATED,
-        {},
-        StatusCodeConstants.SUCCESS
-      ));
+      return res.status(result.error.responseCode).json(result.error);
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       return res.status(code).json(Response.sendError(
         message,
@@ -114,7 +66,6 @@ module.exports = {
   /**
    * Delete Employee By Id
    */
-
   deleteEmployee: async (req, res) => {
     try {
       const { id: userId } = req.params;

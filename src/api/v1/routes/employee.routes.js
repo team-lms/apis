@@ -1,11 +1,13 @@
 const router = require('express').Router();
 const { EmployeeController } = require('../controllers');
-// const { AuthMiddleware } = require('../middlewares');
-
-// router.use(AuthMiddleware.checkAuth);
+const { MulterMiddleware } = require('../middlewares');
 
 router.get('/', EmployeeController.getAllEmployees);
-router.patch('/:id', EmployeeController.updatedEmployee);
+router.patch(
+  '/:id',
+  MulterMiddleware.upload().single('profilePicture'),
+  EmployeeController.updateEmployee
+);
 router.delete('/:id', EmployeeController.deleteEmployee);
 
 module.exports = router;

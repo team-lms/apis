@@ -114,6 +114,8 @@ module.exports = {
         designation: createdUser.designation,
         role: createdUser.role,
         status: createdUser.status,
+        employeeId: createdUser.employeeId,
+        profilePicture: createdUser.profilePicture,
         createdAt: createdUser.createdAt,
         updatedAt: createdUser.updatedAt
       };

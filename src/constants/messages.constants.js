@@ -8,7 +8,7 @@ module.exports = Object.freeze({
   USER_NOT_FOUND: 'User not found',
   PASSWORD_INCORRECT: 'Passwords did not match',
   USER_FETCHED_SUCCESSFULLY: 'User Fetched Successfully',
-  PASSWORD_SENT_SUCCESSFULLY: 'Password has been sent to your mail',
+  PASSWORD_SENT_SUCCESSFULLY: 'Password has been sent on user\'s email id',
   USER_INACTIVE: 'User is Inactive',
   OTP_SENT_SUCCESSFULLY: 'Otp has been send successfully',
   OTP_EXPIRED: 'OTP is Expired',

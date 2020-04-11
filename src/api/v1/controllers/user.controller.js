@@ -16,6 +16,8 @@ const {
   ValidationConstant
 } = require('../../../constants');
 
+const { CloudinaryHelper } = require('../helpers');
+
 module.exports = {
   /**
    * To create a user.
@@ -69,14 +71,24 @@ module.exports = {
           throw new ApiError.ResourceAlreadyExistError(MessageCodeConstants.PHONE_ALREADY_EXISTS);
         }
       }
-      const count = Number(await UserService.countUsers());
-      const employeeId = `${process.env.EMPLOYEE_ID} ' '${count + 1}`;
+
+      const userName = `${userToBeCreated.firstName || ''} ${userToBeCreated.lastName || ''}`.trim();
+      if (req.file && req.file.path) {
+        const cloudinaryResponse = await CloudinaryHelper.upload({
+          filePath: req.file.path,
+          tags: [userName]
+        });
+        userToBeCreated.profilePicture = cloudinaryResponse.secure_url;
+      }
+
+      const count = await UserService.countUsers();
+      const empIdLength = Number(process.env.EMPLOYEE_ID_LENGTH);
+      const employeeId = `${process.env.EMPLOYEE_ID_PREFIX}${('0'.repeat(empIdLength) + (count + 1)).substr(-empIdLength)}`;
       userToBeCreated.employeeId = employeeId;
 
       const password = Crypto.randomBytes(4);
       userToBeCreated.password = await bcrypt.hash(password, 10);
       const createdUser = await UserService.createUser(userToBeCreated);
-      const userName = `${userToBeCreated.firstName || ''} ${userToBeCreated.lastName || ''}`.trim();
 
       (async () => {
         const html = await pug.renderFile(

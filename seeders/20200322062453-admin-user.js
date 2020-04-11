@@ -8,6 +8,7 @@ module.exports = {
     designation: 'Administrator',
     role: 'Admin',
     status: 'Active',
+    employeeId: 'EMP00001',
     createdAt: new Date(),
     updatedAt: new Date()
   }]),

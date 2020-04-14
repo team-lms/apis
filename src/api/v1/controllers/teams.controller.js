@@ -16,20 +16,20 @@ module.exports = {
    */
   getAllTeams: async (req, res) => {
     try {
-      const queryFilters = req.params;
+      const queryFilters = req.query;
       const filters = {
         search: (queryFilters.search) || (QueryConstants.SEARCH),
         offset: Number(queryFilters.offset) || (QueryConstants.OFFSET),
         limit: Number(queryFilters.limit) || (QueryConstants.LIMIT),
-        sortType: (queryFilters.sortType) || (QueryConstants.SORT_TYPE),
+        sortType: (queryFilters.sortType) || (QueryConstants.SORT_TYPE[0]),
         sortBy: (queryFilters.sortField) || (QueryConstants.SORT_BY_TEAM_NAME)
       };
       const teams = await TeamsService.getAllTeams(filters);
-      return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess({
-        message: MessageCodeConstants.TEAM.TEAMS_FETCHED,
+      return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+        MessageCodeConstants.TEAM.TEAMS_FETCHED,
         teams,
-        code: StatusCodeConstants.SUCCESS
-      }));
+        StatusCodeConstants.SUCCESS
+      ));
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       return res.status(code).json(Response.sendError(
         message,

@@ -1,6 +1,6 @@
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
-const { User, sequelize } = require('../../../../models');
+const { User, sequelize, TeamAssociation } = require('../../../../models');
 const OtpService = require('./otp.service');
 const { StatusConstants } = require('../../../constants');
 
@@ -81,7 +81,8 @@ const UserService = {
     },
     order: [[sortBy, sortType]],
     offset,
-    limit
+    limit,
+    includes: TeamAssociation
   }),
 
   /**

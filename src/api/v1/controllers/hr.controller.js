@@ -14,7 +14,7 @@ module.exports = {
    */
   getAllHumanResources: async (req, res) => {
     try {
-      const queryFilters = req.params;
+      const queryFilters = req.query;
       const filters = {
         search: queryFilters.search || QueryConstants.SEARCH,
         offset: Number(queryFilters.offset) || QueryConstants.OFFSET,

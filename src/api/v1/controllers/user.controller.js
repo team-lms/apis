@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const Chalk = require('chalk');
 const path = require('path');
 const pug = require('pug');
-const { UserService } = require('../services');
+const { UserService, EmployeeService } = require('../services');
 const {
   ApiError,
   Crypto,
@@ -95,7 +95,7 @@ module.exports = {
 
       const password = Crypto.randomBytes(4);
       userToBeCreated.password = await bcrypt.hash(password, 10);
-      const createdUser = await UserService.createUser(userToBeCreated);
+      const { createdUser } = await EmployeeService.createANewEmployee(userToBeCreated);
 
       (async () => {
         const html = await pug.renderFile(
@@ -110,22 +110,22 @@ module.exports = {
         });
       })();
 
-      const user = {
-        id: createdUser.id,
-        firstName: createdUser.firstName,
-        lastName: createdUser.lastName,
-        password: MessageCodeConstants.PASSWORD_SENT_SUCCESSFULLY,
-        email: createdUser.email,
-        phoneNumber: createdUser.phoneNumber,
-        whatsappNumber: createdUser.whatsappNumber,
-        designation: createdUser.designation,
-        role: createdUser.role,
-        status: createdUser.status,
-        employeeId: createdUser.employeeId,
-        profilePicture: createdUser.profilePicture,
-        createdAt: createdUser.createdAt,
-        updatedAt: createdUser.updatedAt
-      };
+      // const user = {
+      //   id: createdUser.id,
+      //   firstName: createdUser.firstName,
+      //   lastName: createdUser.lastName,
+      //   password: MessageCodeConstants.PASSWORD_SENT_SUCCESSFULLY,
+      //   email: createdUser.email,
+      //   phoneNumber: createdUser.phoneNumber,
+      //   whatsappNumber: createdUser.whatsappNumber,
+      //   designation: createdUser.designation,
+      //   role: createdUser.role,
+      //   status: createdUser.status,
+      //   employeeId: createdUser.employeeId,
+      //   profilePicture: createdUser.profilePicture,
+      //   createdAt: createdUser.createdAt,
+      //   updatedAt: createdUser.updatedAt
+      // };
 
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
         MessageCodeConstants.USER_CREATED_SUCCESSFULLY,

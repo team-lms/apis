@@ -30,6 +30,7 @@ module.exports = {
         firstName: requestBody.firstName,
         lastName: requestBody.lastName,
         email: requestBody.email,
+        team: requestBody.team,
         phoneNumber: `${requestBody.phoneNumber}`,
         whatsappNumber: `${requestBody.whatsappNumber || ''}` || null,
         deviceToken: requestBody.deviceToken,
@@ -58,7 +59,8 @@ module.exports = {
             within: Object.keys(RolesConstants).map((key) => RolesConstants[key]),
             message: MessageCodeConstants.IS_NOT_VALID
           }
-        }
+        },
+        team: { presence: { allowEmpty: false } }
       });
       if (validationResult) {
         throw new ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR, validationResult);
@@ -95,43 +97,23 @@ module.exports = {
 
       const password = Crypto.randomBytes(4);
       userToBeCreated.password = await bcrypt.hash(password, 10);
-      const { createdUser } = await EmployeeService.createANewEmployee(userToBeCreated);
+      const result = await EmployeeService.createANewEmployee(userToBeCreated);
+      if (result && result.success) {
+        (async () => {
+          const html = await pug.renderFile(
+            path.join(__dirname, '../../../templates/create-user.pug'),
+            { userName, password }
+          );
 
-      (async () => {
-        const html = await pug.renderFile(
-          path.join(__dirname, '../../../templates/create-user.pug'),
-          { userName, password }
-        );
-
-        Mailer.sendMail({
-          to: createdUser.email,
-          subject: MessageCodeConstants.USER_CREATED_SUCCESSFULLY,
-          html
-        });
-      })();
-
-      // const user = {
-      //   id: createdUser.id,
-      //   firstName: createdUser.firstName,
-      //   lastName: createdUser.lastName,
-      //   password: MessageCodeConstants.PASSWORD_SENT_SUCCESSFULLY,
-      //   email: createdUser.email,
-      //   phoneNumber: createdUser.phoneNumber,
-      //   whatsappNumber: createdUser.whatsappNumber,
-      //   designation: createdUser.designation,
-      //   role: createdUser.role,
-      //   status: createdUser.status,
-      //   employeeId: createdUser.employeeId,
-      //   profilePicture: createdUser.profilePicture,
-      //   createdAt: createdUser.createdAt,
-      //   updatedAt: createdUser.updatedAt
-      // };
-
-      return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
-        MessageCodeConstants.USER_CREATED_SUCCESSFULLY,
-        { user },
-        StatusCodeConstants.SUCCESS
-      ));
+          Mailer.sendMail({
+            to: result.data.data.user.email,
+            subject: MessageCodeConstants.USER_CREATED_SUCCESSFULLY,
+            html
+          });
+        })();
+        return res.status(result.data.responseCode).json(result.data);
+      }
+      return res.status(result.error.code).json(result.error);
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       Chalk.red(error);
       return res.status(code).json(Response.sendError(
@@ -141,5 +123,6 @@ module.exports = {
       ));
     }
   }
+
 
 };

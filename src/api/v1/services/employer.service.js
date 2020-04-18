@@ -11,7 +11,9 @@ const EmployeeService = {
       const createdUser = await UserService.createUser(employeeToBeCreated, transaction);
       const teamToBeAssociated = {
         userId: createdUser.id,
-        isSupervisor: 0
+        isSupervisor: 0,
+        teamId: employeeToBeCreated.team.id,
+        status: employeeToBeCreated.team.status
       };
       await TeamAssociationsService
         .associateATeam(teamToBeAssociated, transaction);
@@ -25,6 +27,7 @@ const EmployeeService = {
         phoneNumber: createdUser.phoneNumber,
         whatsappNumber: createdUser.whatsappNumber,
         designation: createdUser.designation,
+        teamName: employeeToBeCreated.team.teamName,
         role: createdUser.role,
         status: createdUser.status,
         employeeId: createdUser.employeeId,

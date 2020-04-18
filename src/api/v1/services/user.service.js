@@ -9,8 +9,9 @@ const UserService = {
   /**
    * Create new user
    */
-  createUser: async (userToBeCreated) => User.create(
-    userToBeCreated
+  createUser: async (userToBeCreated, transaction = null) => User.create(
+    userToBeCreated,
+    { ...(transaction && { transaction }) }
   ),
 
   /**

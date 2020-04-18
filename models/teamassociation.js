@@ -5,6 +5,9 @@ module.exports = (sequelize, DataTypes) => {
     userId: {
       type: DataTypes.INTEGER
     },
+    teamId: {
+      type: DataTypes.INTEGER
+    },
     isSupervisor: {
       type: DataTypes.BOOLEAN
     },
@@ -17,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
   }, { paranoid: true });
   TeamAssociation.associate = (models) => {
     TeamAssociation.belongsTo(models.User, { as: 'user', foreignKey: 'userId', foreignKeyConstraint: true });
+    TeamAssociation.belongsTo(models.Team, { as: 'team', foreignKey: 'teamId', foreignKeyConstraint: true });
   };
   return TeamAssociation;
 };

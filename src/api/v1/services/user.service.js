@@ -1,4 +1,4 @@
-const { Op } = require('sequelize');
+const { Op, Sequelize } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const { User, sequelize, TeamAssociation } = require('../../../../models');
 const OtpService = require('./otp.service');
@@ -73,18 +73,34 @@ const UserService = {
    * Get All Users based on their Roles
    */
   getAllUsers: async ({ role }, {
-    offset, limit, sortBy, sortType
-  }) => User.findAndCountAll({
-    attributes: { exclude: ['deviceToken', 'appVersion', 'password', 'updatedAt', 'deletedAt'] },
-    where: {
-      role,
-      status: StatusConstants.ACTIVE
-    },
-    order: [[sortBy, sortType]],
-    offset,
-    limit,
-    includes: TeamAssociation
-  }),
+    offset, limit, sortBy, sortType, searchBy, searchTerm
+  }) => {
+    let sortByTerm = null;
+    let searchCriteria = {};
+    if (searchBy.toLowerCase() === 'name' && searchTerm) {
+      searchCriteria = Sequelize.fn('concat', Sequelize.fn('trim', Sequelize.col('firstName')), ' ', Sequelize.fn('trim', Sequelize.col('lastName')), {
+        [Op.substring]: searchTerm
+      });
+    }
+
+    sortByTerm = sortBy === 'name'
+      ? Sequelize.fn('concat', Sequelize.fn('trim', Sequelize.col('firstName')), ' ', Sequelize.fn('trim', Sequelize.col('lastName')))
+      : sortBy;
+    return User.findAndCountAll({
+      attributes: { exclude: ['deviceToken', 'appVersion', 'password', 'updatedAt', 'deletedAt'] },
+      where: {
+        role,
+        searchCriteria,
+        status: StatusConstants.ACTIVE
+
+      },
+
+      order: [[sortByTerm, sortType]],
+      offset,
+      limit,
+      includes: TeamAssociation
+    });
+  },
 
   /**
    * Delete User By Id

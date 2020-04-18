@@ -17,11 +17,12 @@ module.exports = {
     try {
       const queryFilters = req.query;
       const filters = {
-        search: queryFilters.search || (QueryConstants.SEARCH),
+        searchTerm: queryFilters.searchTerm || (QueryConstants.SEARCH_TERM),
+        searchBy: queryFilters.searchBy || (QueryConstants.SEARCH_BY),
         offset: Number(queryFilters.offset) || QueryConstants.OFFSET,
         limit: Number(queryFilters.pageNo) || QueryConstants.LIMIT,
-        sortType: queryFilters.orderBy || QueryConstants.SORT_TYPE[0],
-        sortBy: queryFilters.sortType || QueryConstants.SORT_BY
+        sortType: queryFilters.sortType || QueryConstants.SORT_TYPE[0],
+        sortBy: queryFilters.sortBy || QueryConstants.SORT_BY
       };
 
       const employees = await UserService.getAllUsers({ role: RolesConstants.EMPLOYEE }, filters);

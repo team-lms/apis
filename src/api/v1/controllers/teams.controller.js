@@ -9,6 +9,7 @@ const {
   ApiError
 } = require('../../../utils');
 const { TeamsService } = require('../services');
+const { TeamsHelper } = require('../helpers');
 
 module.exports = {
   /**
@@ -65,14 +66,8 @@ module.exports = {
 
         );
       }
-
       if (teamToBeCreated.teamLeader) {
-        const teamAssociation = {
-          userId: teamToBeCreated.teamLeader.id,
-          isSupervisor: 1,
-          status: teamToBeCreated.teamLeader.status
-        };
-        await TeamsService.createATeamWithTeamLeaderAssigned(teamToBeCreated, teamAssociation);
+        await TeamsHelper.assignATeamWithTeamLeaderAssigned(teamToBeCreated);
       } else {
         await TeamsService.createTeam(teamToBeCreated);
       }
@@ -90,5 +85,29 @@ module.exports = {
       ));
     }
   }
+
+  // updateATeam: async (req, res) => {
+  //   try {
+  //     const reqBody = req.body;
+  //     const teamToBeUpdated = {
+  //       teamName: reqBody.teamName,
+  //       status: reqBody.status,
+  //       teamLeader: reqBody.teamLeader
+  //     };
+  //     const validationResult = Validator.validate(teamToBeUpdated, {
+  //       teamName: { presence: { allowEmpty: false } }
+  //     });
+  //     if (validationResult) {
+  //       throw new ApiError.ValidationError(MessageCodeConstants.ValidationError,
+  // validationResult);
+  //     }
+  //   } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+  //     return res.status(code).json(Response.sendError(
+  //       message,
+  //       error,
+  //       code
+  //     ));
+  //   }
+  // }
 
 };

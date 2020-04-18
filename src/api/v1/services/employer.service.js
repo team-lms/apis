@@ -43,7 +43,7 @@ const EmployeeService = {
           StatusCodeConstants.SUCCESS
         )
       };
-    } catch ({ message, code = StatusCodeConstants, error }) {
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       if (transaction) {
         transaction.rollback();
       }

@@ -1,6 +1,5 @@
-const { Team, sequelize } = require('../../../../models');
-const TeamAssociationsService = require('./teamAssociations');
-
+const { Team, TeamAssociation } = require('../../../../models');
+// const TeamAssociationsService = require('./teamAssociations');
 
 const TeamsService = {
 
@@ -13,7 +12,8 @@ const TeamsService = {
     order: [[sortBy, sortType]],
     offset,
     limit,
-    paranoid: false
+    include: [{ model: TeamAssociation, as: 'teamAssociations' }]
+
   }),
 
 
@@ -26,20 +26,20 @@ const TeamsService = {
     }
     return Team.findOne({
       where: { teamName },
-      paranoid: false
+      paranoid: true
     });
   },
 
-  createATeamWithTeamLeaderAssigned: async (teamToBeCreated, teamAssociations) => {
-    const transaction = await sequelize.transaction();
-    try {
-      await TeamsService.createTeam(teamToBeCreated, transaction);
-      await TeamAssociationsService.associateATeam(teamAssociations, transaction);
-      transaction.commit();
-    } catch (error) {
-      await transaction.rollback();
-    }
-  },
+  // createATeamWithTeamLeaderAssigned: async (teamToBeCreated, teamAssociations) => {
+  //   const transaction = await sequelize.transaction();
+  //   try {
+  //     await TeamsService.createTeam(teamToBeCreated, transaction);
+  //     await TeamAssociationsService.associateATeam(teamAssociations, transaction);
+  //     transaction.commit();
+  //   } catch (error) {
+  //     await transaction.rollback();
+  //   }
+  // },
 
   /**
    * Create a Team
@@ -47,7 +47,19 @@ const TeamsService = {
 
   createTeam: async (teamToBeCreated, transaction = null) => Team.create(teamToBeCreated, {
     ...(transaction && { transaction })
-  })
+  }),
+
+  /**
+   * Update A Team
+   */
+
+  updateATeam: async (teamToBeUpdated, id, transaction) => Team.update(
+    teamToBeUpdated,
+    {
+      where: { id },
+      ...(transaction && { transaction })
+    }
+  )
 
 };
 

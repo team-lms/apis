@@ -37,7 +37,9 @@ const UserService = {
   /**
    * Count all users
    */
-  countUsers: async () => User.count(),
+  countUsers: async () => User.count(
+    { paranoid: false }
+  ),
 
   /**
    * Update user by user id

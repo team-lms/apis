@@ -113,7 +113,7 @@ module.exports = {
         })();
         return res.status(result.data.responseCode).json(result.data);
       }
-      return res.status(result.error.code).json(result.error);
+      return res.status(result.error.responseCode).json(result.error);
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       Chalk.red(error);
       return res.status(code).json(Response.sendError(

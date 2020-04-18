@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, { paranoid: true });
   Team.associate = (models) => {
-    Team.hasMany(models.TeamAssociation, { as: 'teamAssociations', foreignKey: 'userId' });
+    Team.hasMany(models.TeamAssociation, { as: 'teamAssociations', foreignKey: 'teamId' });
   };
 
 

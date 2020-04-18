@@ -16,9 +16,10 @@ module.exports = Object.freeze({
   OTP_DO_NOT_MATCH: 'OTP do not match',
   PASSWORD_UPDATED_SUCCESSFULLY: 'Password has been updated successfully',
   UNAUTHORIZED_USER: 'Unauthorized User',
+  USER_CREATED: 'User Created Successfully',
   EMPLOYEE_FETCHED: 'Employee Fetched Successfully',
-  EMPLOYEE_CREATED: 'Employee Created Successfully',
   EMPLOYEE: {
+    EMPLOYEE_CREATED: 'Employee Created Successfully',
     EMPLOYEE_UPDATED: 'Employee has been updated Successfully',
     EMPLOYEE_DELETED: 'Employee has been deleted Successfully'
   },
@@ -28,6 +29,7 @@ module.exports = Object.freeze({
     SUPERVISOR_DELETED: 'Supervisor has been deleted Successfully'
   },
   HUMAN_RESOURCE: {
+    HUMAN_RESOURCE_CREATED: 'Human Resource has been Created',
     HUMAN_RESOURCE_FETCHED: 'Human Resource Managers has been fetched Successfully '
   },
   TEAM: {

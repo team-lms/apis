@@ -30,17 +30,6 @@ const TeamsService = {
     });
   },
 
-  // createATeamWithTeamLeaderAssigned: async (teamToBeCreated, teamAssociations) => {
-  //   const transaction = await sequelize.transaction();
-  //   try {
-  //     await TeamsService.createTeam(teamToBeCreated, transaction);
-  //     await TeamAssociationsService.associateATeam(teamAssociations, transaction);
-  //     transaction.commit();
-  //   } catch (error) {
-  //     await transaction.rollback();
-  //   }
-  // },
-
   /**
    * Create a Team
    */

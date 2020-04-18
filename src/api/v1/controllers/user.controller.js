@@ -23,6 +23,8 @@ module.exports = {
   /**
    * To create a user.
    */
+
+  // TODO: Something to do here
   createUser: async (req, res) => {
     try {
       const requestBody = req.body;
@@ -106,12 +108,18 @@ module.exports = {
           );
 
           Mailer.sendMail({
-            to: result.data.data.user.email,
+            to: result.data.email,
             subject: MessageCodeConstants.USER_CREATED_SUCCESSFULLY,
             html
           });
         })();
-        return res.status(result.data.responseCode).json(result.data);
+        return res.status(StatusCodeConstants.SUCCESS).json(
+          Response.sendSuccess(
+            MessageCodeConstants.EMPLOYEE.EMPLOYEE_CREATED,
+            result.data,
+            StatusCodeConstants.SUCCESS
+          )
+        );
       }
       return res.status(result.error.responseCode).json(result.error);
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {

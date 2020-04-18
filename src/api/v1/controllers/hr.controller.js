@@ -1,5 +1,6 @@
 const { Response } = require('../../../utils');
 const { UserService } = require('../services');
+const { UserHelper } = require('../helpers');
 const {
   MessageCodeConstants,
   QueryConstants,
@@ -28,6 +29,32 @@ module.exports = {
         humanResource,
         StatusCodeConstants.SUCCESS
       ));
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      return res.status(code).json(Response.sendError(
+        message,
+        error,
+        code
+      ));
+    }
+  },
+
+  /**
+   * Create A HR
+   */
+
+  createAHumanResource: async (req, res) => {
+    try {
+      const result = await UserHelper.createAUser(req);
+      if (result && result.success) {
+        return res.status(StatusCodeConstants.SUCCESS).json(
+          Response.sendSuccess(
+            MessageCodeConstants.HUMAN_RESOURCE.HUMAN_RESOURCE_CREATED,
+            result.data,
+            StatusCodeConstants.SUCCESS
+          )
+        );
+      }
+      return res.status(result.error.responseCode).json(result.error);
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       return res.status(code).json(Response.sendError(
         message,

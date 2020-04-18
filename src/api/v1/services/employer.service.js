@@ -37,11 +37,8 @@ const EmployeeService = {
       };
       return {
         success: true,
-        data: Response.sendSuccess(
-          MessageCodeConstants.USER_CREATED_SUCCESSFULLY,
-          { user },
-          StatusCodeConstants.SUCCESS
-        )
+        data: user
+
       };
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       if (transaction) {

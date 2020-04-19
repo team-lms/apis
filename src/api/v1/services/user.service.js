@@ -73,28 +73,41 @@ const UserService = {
    * Get All Users based on their Roles
    */
   getAllUsers: async ({ role }, {
-    offset, limit, sortBy, sortType, searchBy, searchTerm
+    offset,
+    limit,
+    sortBy,
+    sortType,
+    searchBy,
+    searchTerm
   }) => {
-    let sortByTerm = null;
     let searchCriteria = {};
     if (searchBy.toLowerCase() === 'name' && searchTerm) {
-      searchCriteria = Sequelize.fn('concat', Sequelize.fn('trim', Sequelize.col('firstName')), ' ', Sequelize.fn('trim', Sequelize.col('lastName')), {
-        [Op.substring]: searchTerm
-      });
+      searchCriteria = Sequelize.where(
+        Sequelize.fn('concat', Sequelize.fn('trim', Sequelize.col('firstName')), ' ', Sequelize.fn('trim', Sequelize.col('lastName'))),
+        { [Op.substring]: searchTerm }
+      );
+    } else {
+      searchCriteria = {
+        ...((searchBy && searchTerm) && {
+          [searchBy]: {
+            [Op.substring]: searchTerm
+          }
+        })
+      };
     }
 
-    sortByTerm = sortBy === 'name'
+    const sortByTerm = sortBy === 'name'
       ? Sequelize.fn('concat', Sequelize.fn('trim', Sequelize.col('firstName')), ' ', Sequelize.fn('trim', Sequelize.col('lastName')))
       : sortBy;
+
     return User.findAndCountAll({
       attributes: { exclude: ['deviceToken', 'appVersion', 'password', 'updatedAt', 'deletedAt'] },
       where: {
-        role,
-        searchCriteria,
-        status: StatusConstants.ACTIVE
-
+        [Op.and]: [
+          { role, status: StatusConstants.ACTIVE },
+          searchCriteria
+        ]
       },
-
       order: [[sortByTerm, sortType]],
       offset,
       limit,

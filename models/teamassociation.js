@@ -3,19 +3,23 @@ const { StatusConstants } = require('../src/constants');
 module.exports = (sequelize, DataTypes) => {
   const TeamAssociation = sequelize.define('TeamAssociation', {
     userId: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
     teamId: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
     isSupervisor: {
-      type: DataTypes.BOOLEAN
+      type: DataTypes.BOOLEAN,
+      allowNull: false
     },
     status: {
       type: DataTypes.ENUM(
         StatusConstants.ACTIVE,
         StatusConstants.INACTIVE
-      )
+      ),
+      allowNull: false
     }
   }, { paranoid: true });
   TeamAssociation.associate = (models) => {

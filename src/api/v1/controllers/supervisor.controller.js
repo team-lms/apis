@@ -111,7 +111,7 @@ module.exports = {
       const { id: userId } = req.params;
       await UserService.deleteUserById(userId);
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
-        MessageCodeConstants.SUPERVISOR_DELETED,
+        MessageCodeConstants.SUPERVISOR.SUPERVISOR_DELETED,
         {},
         StatusCodeConstants.SUCCESS
       ));

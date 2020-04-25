@@ -9,9 +9,10 @@ const EmployeeService = {
     const transaction = await sequelize.transaction();
     try {
       const createdUser = await UserService.createUser(employeeToBeCreated, transaction);
+      const isSupervisor = createdUser.role === 'Supervisor' ? 1 : 0;
       const teamToBeAssociated = {
         userId: createdUser.id,
-        isSupervisor: 0,
+        isSupervisor,
         teamId: employeeToBeCreated.team.id,
         status: employeeToBeCreated.team.status
       };

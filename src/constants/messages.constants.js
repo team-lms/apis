@@ -30,7 +30,9 @@ module.exports = Object.freeze({
   },
   HUMAN_RESOURCE: {
     HUMAN_RESOURCE_CREATED: 'Human Resource has been Created',
-    HUMAN_RESOURCE_FETCHED: 'Human Resource Managers has been fetched Successfully '
+    HUMAN_RESOURCE_FETCHED: 'Human Resource Managers has been fetched Successfully',
+    HUMAN_RESOURCE_UPDATED: 'Human Resource Manager has been updated Successfully',
+    HUMAN_RESOURCE_DELETED: 'Human Resource Manager has been deleted Successfully'
   },
   TEAM: {
     TEAMS_FETCHED: 'Teams Fetched Successfully',

@@ -63,5 +63,50 @@ module.exports = {
         code
       ));
     }
+  },
+
+  /**
+   * Update A HR
+   */
+
+  updateAHumanResourceById: async (req, res) => {
+    try {
+      const result = await UserHelper.updateUser(req);
+      if (result && result.success) {
+        return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+          MessageCodeConstants.HUMAN_RESOURCE.HUMAN_RESOURCE_UPDATED,
+          {},
+          StatusCodeConstants.SUCCESS
+        ));
+      }
+      return res.status(result.error.responseCode).json(result.error);
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      return res.status(code).json(Response.sendError(
+        message,
+        error,
+        code
+      ));
+    }
+  },
+
+  /**
+   * Delete A HR by Id
+   */
+  deleteHumanResourceById: async (req, res) => {
+    try {
+      const { id: userId } = req.params;
+      await UserService.deleteUserById(userId);
+      return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+        MessageCodeConstants.HUMAN_RESOURCE.HUMAN_RESOURCE_DELETED,
+        {},
+        StatusCodeConstants.SUCCESS
+      ));
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      return res.status(code).json(Response.sendError(
+        message,
+        error,
+        code
+      ));
+    }
   }
 };

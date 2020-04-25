@@ -17,7 +17,8 @@ module.exports = {
     try {
       const queryFilters = req.query;
       const filters = {
-        search: queryFilters.search || QueryConstants.SEARCH,
+        searchTerm: queryFilters.searchTerm || QueryConstants.SEARCH_TERM,
+        searchBy: queryFilters.searchBy || QueryConstants.SEARCH_BY,
         offset: Number(queryFilters.offset) || QueryConstants.OFFSET,
         limit: Number(queryFilters.limit) || QueryConstants.LIMIT,
         sortType: queryFilters.sortType || QueryConstants.SORT_TYPE[0],

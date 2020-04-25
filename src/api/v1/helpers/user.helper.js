@@ -207,8 +207,5 @@ const UserHelper = {
       };
     }
   }
-
 };
-
-
 module.exports = UserHelper;

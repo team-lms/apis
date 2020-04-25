@@ -115,7 +115,7 @@ module.exports = {
         })();
         return res.status(StatusCodeConstants.SUCCESS).json(
           Response.sendSuccess(
-            MessageCodeConstants.EMPLOYEE.EMPLOYEE_CREATED,
+            MessageCodeConstants.EMPLOYEE.CREATED,
             result.data,
             StatusCodeConstants.SUCCESS
           )

@@ -27,7 +27,7 @@ module.exports = {
       };
       const teams = await TeamsService.getAllTeams(filters);
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
-        MessageCodeConstants.TEAM.TEAMS_FETCHED,
+        MessageCodeConstants.TEAM.FETCHED,
         teams,
         StatusCodeConstants.SUCCESS
       ));
@@ -62,7 +62,7 @@ module.exports = {
 
       if (foundTeam) {
         throw new ApiError.ResourceAlreadyExistError(
-          MessageCodeConstants.TEAM.TEAM_ALREADY_EXISTS
+          MessageCodeConstants.TEAM.ALREADY_EXISTS
 
         );
       }
@@ -73,7 +73,7 @@ module.exports = {
       }
 
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
-        MessageCodeConstants.TEAM.TEAM_CREATED_SUCCESSFULLY,
+        MessageCodeConstants.TEAM.CREATED,
         {},
         StatusCodeConstants.SUCCESS
       ));

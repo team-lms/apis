@@ -30,7 +30,7 @@ module.exports = {
         role: RolesConstants.SUPERVISOR
       }, filters);
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
-        MessageCodeConstants.SUPERVISOR.SUPERVISOR_FETCHED,
+        MessageCodeConstants.SUPERVISOR.FETCHED,
         supervisors,
         StatusCodeConstants.SUCCESS
       ));
@@ -87,7 +87,7 @@ module.exports = {
       }
       await UserService.updateUserById(supervisorToBeUpdated, userId);
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
-        MessageCodeConstants.SUPERVISOR_UPDATED,
+        MessageCodeConstants.UPDATED,
         supervisorToBeUpdated,
         StatusCodeConstants.SUCCESS
       ));
@@ -108,7 +108,7 @@ module.exports = {
       const { id: userId } = req.params;
       await UserService.deleteUserById(userId);
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
-        MessageCodeConstants.SUPERVISOR_DELETED,
+        MessageCodeConstants.DELETED,
         {},
         StatusCodeConstants.SUCCESS
       ));

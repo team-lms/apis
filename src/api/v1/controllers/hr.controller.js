@@ -26,7 +26,7 @@ module.exports = {
       };
       const humanResource = await UserService.getAllUsers({ role: RolesConstants.HR }, filters);
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
-        MessageCodeConstants.HUMAN_RESOURCE.HUMAN_RESOURCE_FETCHED,
+        MessageCodeConstants.HUMAN_RESOURCE.FETCHED,
         humanResource,
         StatusCodeConstants.SUCCESS
       ));
@@ -49,7 +49,7 @@ module.exports = {
       if (result && result.success) {
         return res.status(StatusCodeConstants.SUCCESS).json(
           Response.sendSuccess(
-            MessageCodeConstants.HUMAN_RESOURCE.HUMAN_RESOURCE_CREATED,
+            MessageCodeConstants.HUMAN_RESOURCE.CREATED,
             result.data,
             StatusCodeConstants.SUCCESS
           )
@@ -74,7 +74,7 @@ module.exports = {
       const result = await UserHelper.updateUser(req);
       if (result && result.success) {
         return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
-          MessageCodeConstants.HUMAN_RESOURCE.HUMAN_RESOURCE_UPDATED,
+          MessageCodeConstants.HUMAN_RESOURCE.UPDATED,
           {},
           StatusCodeConstants.SUCCESS
         ));
@@ -97,7 +97,7 @@ module.exports = {
       const { id: userId } = req.params;
       await UserService.deleteUserById(userId);
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
-        MessageCodeConstants.HUMAN_RESOURCE.HUMAN_RESOURCE_DELETED,
+        MessageCodeConstants.HUMAN_RESOURCE.DELETED,
         {},
         StatusCodeConstants.SUCCESS
       ));

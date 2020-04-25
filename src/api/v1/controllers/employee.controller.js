@@ -27,7 +27,7 @@ module.exports = {
 
       const employees = await UserService.getAllUsers({ role: RolesConstants.EMPLOYEE }, filters);
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
-        MessageCodeConstants.EMPLOYEE_FETCHED,
+        MessageCodeConstants.EMPLOYEE.FETCHED,
         employees,
         StatusCodeConstants.SUCCESS
       ));
@@ -49,7 +49,7 @@ module.exports = {
       const result = await UserHelper.updateUser(req);
       if (result && result.success) {
         return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
-          MessageCodeConstants.EMPLOYEE.EMPLOYEE_UPDATED,
+          MessageCodeConstants.EMPLOYEE.UPDATED,
           {},
           StatusCodeConstants.SUCCESS
         ));
@@ -72,7 +72,7 @@ module.exports = {
       const { id: userId } = req.params;
       await UserService.deleteUserById(userId);
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
-        MessageCodeConstants.EMPLOYEE.EMPLOYEE_DELETED,
+        MessageCodeConstants.EMPLOYEE.DELETED,
         {},
         StatusCodeConstants.SUCCESS
       ));

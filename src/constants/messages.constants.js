@@ -5,10 +5,10 @@ module.exports = Object.freeze({
   EMAIL_ALREADY_EXISTS: 'Email already exists',
   PHONE_ALREADY_EXISTS: 'Phone number already exists',
   IS_NOT_VALID: 'is not valid',
-  USER_CREATED_SUCCESSFULLY: 'User created successfully',
+  USER_CREATED_SUCCESSFULLY: 'User created successfully', // TODO: This message will not be used in future
   USER_NOT_FOUND: 'User not found',
   PASSWORD_INCORRECT: 'Passwords did not match',
-  USER_FETCHED_SUCCESSFULLY: 'User Fetched Successfully',
+  USER_FETCHED_SUCCESSFULLY: 'User Fetched Successfully', // TODO: This message will not be used in future
   PASSWORD_SENT_SUCCESSFULLY: 'Password has been sent on user\'s email id',
   USER_INACTIVE: 'User is Inactive',
   OTP_SENT_SUCCESSFULLY: 'Otp has been send successfully',
@@ -16,28 +16,28 @@ module.exports = Object.freeze({
   OTP_DO_NOT_MATCH: 'OTP do not match',
   PASSWORD_UPDATED_SUCCESSFULLY: 'Password has been updated successfully',
   UNAUTHORIZED_USER: 'Unauthorized User',
-  USER_CREATED: 'User Created Successfully',
-  EMPLOYEE_FETCHED: 'Employee Fetched Successfully',
+  USER_CREATED: 'User Created Successfully', // TODO: This message will not be used in future
   EMPLOYEE: {
-    EMPLOYEE_CREATED: 'Employee Created Successfully',
-    EMPLOYEE_UPDATED: 'Employee has been updated Successfully',
-    EMPLOYEE_DELETED: 'Employee has been deleted Successfully'
+    FETCHED: 'Employees have been fetched successfully',
+    CREATED: 'Employee has been created successfully',
+    UPDATED: 'Employee has been updated successfully',
+    DELETED: 'Employee has been deleted successfully'
   },
   SUPERVISOR: {
-    SUPERVISOR_FETCHED: 'Supervisors has been fetched Successfully',
-    SUPERVISOR_UPDATED: 'Supervisor has been updated Successfully',
-    SUPERVISOR_DELETED: 'Supervisor has been deleted Successfully'
+    FETCHED: 'Supervisors have been fetched successfully',
+    UPDATED: 'Supervisor has been updated successfully',
+    DELETED: 'Supervisor has been deleted successfully'
   },
   HUMAN_RESOURCE: {
-    HUMAN_RESOURCE_CREATED: 'Human Resource has been Created',
-    HUMAN_RESOURCE_FETCHED: 'Human Resource Managers has been fetched Successfully',
-    HUMAN_RESOURCE_UPDATED: 'Human Resource Manager has been updated Successfully',
-    HUMAN_RESOURCE_DELETED: 'Human Resource Manager has been deleted Successfully'
+    CREATED: 'Human resource manager has been created successfully',
+    FETCHED: 'Human resource managers have been fetched successfully',
+    UPDATED: 'Human resource manager has been updated successfully',
+    DELETED: 'Human resource manager has been deleted successfully'
   },
   TEAM: {
-    TEAMS_FETCHED: 'Teams Fetched Successfully',
-    TEAM_ALREADY_EXISTS: 'Team Already Exists',
-    TEAM_CREATED_SUCCESSFULLY: 'Team Created Successfully'
+    FETCHED: 'Teams have been fetched successfully',
+    ALREADY_EXISTS: 'Team already exists',
+    CREATED: 'Team has been created successfully'
   }
 
 });

@@ -11,6 +11,7 @@ const {
   ApiError
 } = require('../../../utils');
 const { UserService } = require('../services');
+const { UserHelper } = require('../helpers');
 
 module.exports = {
   /**
@@ -20,12 +21,14 @@ module.exports = {
     try {
       const queryFilters = req.query;
       const filters = {
-        search: (queryFilters.search) || (QueryConstants.SEARCH),
-        offset: Number(queryFilters.offset) || (QueryConstants.OFFSET),
-        limit: Number(queryFilters.limit) || (QueryConstants.LIMIT),
-        sortType: (queryFilters.sortType) || (QueryConstants.SORT_TYPE[0]),
-        sortBy: (queryFilters.sortField) || (QueryConstants.SORT_BY)
+        searchTerm: queryFilters.searchTerm || QueryConstants.SEARCH_TERM,
+        searchBy: queryFilters.searchBy || QueryConstants.SEARCH_BY,
+        offset: Number(queryFilters.offset) || QueryConstants.OFFSET,
+        limit: Number(queryFilters.limit) || QueryConstants.LIMIT,
+        sortType: queryFilters.sortType || QueryConstants.SORT_TYPE[0],
+        sortBy: queryFilters.sortField || QueryConstants.SORT_BY
       };
+
       const supervisors = await UserService.getAllUsers({
         role: RolesConstants.SUPERVISOR
       }, filters);
@@ -117,6 +120,31 @@ module.exports = {
         message,
         code,
         error
+      ));
+    }
+  },
+
+  /**
+   * Create a Supervisor
+   */
+  createASupervisor: async (req, res) => {
+    try {
+      const result = await UserHelper.createAUser(req);
+      if (result && result.success) {
+        return res.status(StatusCodeConstants.SUCCESS).json(
+          Response.sendSuccess(
+            MessageCodeConstants.SUPERVISOR.SUPERVISOR_CREATED,
+            result.data,
+            StatusCodeConstants.SUCCESS
+          )
+        );
+      }
+      return res.status(result.error.responseCode).json(result.error);
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      return res.status(code).json(Response.sendError(
+        message,
+        error,
+        code
       ));
     }
   }

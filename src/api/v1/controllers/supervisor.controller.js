@@ -90,7 +90,7 @@ module.exports = {
       }
       await UserService.updateUserById(supervisorToBeUpdated, userId);
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
-        MessageCodeConstants.SUPERVISOR_UPDATED,
+        MessageCodeConstants.SUPERVISOR.SUPERVISOR_UPDATED,
         supervisorToBeUpdated,
         StatusCodeConstants.SUCCESS
       ));

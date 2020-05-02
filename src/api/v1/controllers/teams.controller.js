@@ -63,7 +63,6 @@ module.exports = {
       if (foundTeam) {
         throw new ApiError.ResourceAlreadyExistError(
           MessageCodeConstants.TEAM.ALREADY_EXISTS
-
         );
       }
       if (teamToBeCreated.teamLeader) {

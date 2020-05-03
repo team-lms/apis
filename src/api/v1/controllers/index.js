@@ -4,7 +4,7 @@ const EmployeeController = require('./employee.controller');
 const SupervisorController = require('./supervisor.controller');
 const HrController = require('./hr.controller');
 const TeamController = require('./teams.controller');
-
+const LeaveController = require('./leave.controller');
 
 module.exports = {
   AuthController,
@@ -12,5 +12,6 @@ module.exports = {
   EmployeeController,
   SupervisorController,
   HrController,
-  TeamController
+  TeamController,
+  LeaveController
 };

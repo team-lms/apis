@@ -4,6 +4,7 @@ const OtpService = require('./otp.service');
 const TeamsService = require('./team.service');
 const TeamAssociationService = require('./teamAssociations');
 const EmployeeService = require('./employer.service');
+const LeaveService = require('./leaves.service');
 
 module.exports = {
   UserService,
@@ -11,5 +12,6 @@ module.exports = {
   OtpService,
   TeamsService,
   TeamAssociationService,
-  EmployeeService
+  EmployeeService,
+  LeaveService
 };

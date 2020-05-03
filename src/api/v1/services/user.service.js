@@ -122,7 +122,16 @@ const UserService = {
    */
   deleteUserById: async (id, transaction = null) => User.destroy({
     where: { id }, ...(transaction && { transaction })
-  })
+  }),
+
+  /**
+   * Update Leave By Role
+   */
+
+  updateLeaveByRole: async (role, casualLeaves, transaction = null) => User.update(
+    { casualLeaves: sequelize.literal('casualLeaves + 1') },
+    { where: { role }, ...(transaction && { transaction }) }
+  )
 
 };
 module.exports = UserService;

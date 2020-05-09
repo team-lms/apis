@@ -6,8 +6,9 @@ const { Validator, ApiError, Response } = require('../../../utils');
 const { MessageCodeConstants, StatusCodeConstants, StatusConstants } = require('../../../constants');
 
 module.exports = {
+
   /**
-   * To Login
+   * Login to the system and get a valid token
    */
   login: async (req, res) => {
     try {
@@ -16,6 +17,7 @@ module.exports = {
         userId: { presence: { allowEmpty: false }, email: true },
         password: { presence: { allowEmpty: false } }
       });
+
       if (validationResult) {
         throw new ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR, validationResult);
       }
@@ -24,6 +26,7 @@ module.exports = {
         email: userToBeLoggedIn.userId,
         phoneNumber: userToBeLoggedIn.userId
       });
+
       if (foundUser) {
         if (await bcrypt.compare(userToBeLoggedIn.password, foundUser.password)) {
           if (foundUser.status === StatusConstants.ACTIVE) {

@@ -1,15 +1,18 @@
+/* eslint-disable consistent-return */
 const jwt = require('jsonwebtoken');
 const { StatusCodeConstants, MessageCodeConstants } = require('../../../constants');
-const { Response, Crypto } = require('../../../utils');
+const { Response } = require('../../../utils');
 
 module.exports = {
-  // eslint-disable-next-line consistent-return
+
+  /**
+   * Check wether the token is valid or not
+   */
   checkAuth: async (req, res, next) => {
     try {
       const token = req.headers.authorization.split(' ').pop().trim();
-      const { data: hashInfo } = jwt.verify(token, process.env.JWT_SECRET_KEY);
-      const userInfo = JSON.parse(Crypto.decrypt(hashInfo));
-      req.userInfo = userInfo;
+      const { data: userInfoString } = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      req.userInfo = JSON.parse(userInfoString);
       next();
     } catch (error) {
       return res.status(StatusCodeConstants.UNAUTHORIZED).json(Response.sendError(
@@ -20,17 +23,21 @@ module.exports = {
     }
   },
 
-  /* Check Auth By Role */
-
+  /**
+   * Check auth by role
+   * This middleware must be used after checkAuth middleware
+   * as it uses the logged in user's info
+   */
 
   checkAuthByRole: (roles) => (req, res, next) => {
     if (roles.indexOf(req.userInfo.role) > -1) {
       next();
+    } else {
+      return res.status(StatusCodeConstants.UNAUTHORIZED).json(Response.sendError(
+        MessageCodeConstants.UNAUTHORIZED_USER,
+        {},
+        StatusCodeConstants.UNAUTHORIZED
+      ));
     }
-    return res.status(StatusCodeConstants.UNAUTHORIZED).json(Response.sendError(
-      MessageCodeConstants.UNAUTHORIZED_USER,
-      {},
-      StatusCodeConstants.UNa
-    ));
   }
 };

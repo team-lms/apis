@@ -6,9 +6,16 @@ const JwtService = {
    * Create brand new token
    */
   createToken: ({
-    userId, email, role, phoneNumber
+    id, email, role, phoneNumber
   }) => jwt.sign(
-    { data: JSON.stringify(userId, email, role, phoneNumber) },
+    {
+      data: JSON.stringify({
+        id,
+        email,
+        role,
+        phoneNumber
+      })
+    },
     process.env.JWT_SECRET_KEY,
     { expiresIn: '1d' }
   ),

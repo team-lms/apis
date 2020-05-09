@@ -1,9 +1,19 @@
 const router = require('express').Router();
 const { HrController } = require('../controllers');
-const { MulterMiddleware } = require('../middlewares');
+const { AuthMiddleware, MulterMiddleware } = require('../middlewares');
+const { AccessConstants } = require('../../../constants');
 
-router.get('/', HrController.getAllHumanResources);
-router.post('/', HrController.createAHumanResource);
+router.use(AuthMiddleware.checkAuth);
+router.post(
+  '/',
+  AuthMiddleware.checkAuthByRole(AccessConstants.HUMAN_RESOURCE.CREATE),
+  HrController.createNewHumanResource
+);
+router.get(
+  '/',
+  AuthMiddleware.checkAuthByRole(AccessConstants.HUMAN_RESOURCE.GET_ALL),
+  HrController.getAllHumanResources
+);
 router.patch(
   '/:id',
   MulterMiddleware.upload().single('profilePicture'),

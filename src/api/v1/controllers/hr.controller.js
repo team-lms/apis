@@ -43,7 +43,7 @@ module.exports = {
    * Create A HR
    */
 
-  createAHumanResource: async (req, res) => {
+  createNewHumanResource: async (req, res) => {
     try {
       const result = await UserHelper.createAUser(req);
       if (result && result.success) {

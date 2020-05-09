@@ -2,7 +2,11 @@ const bcrypt = require('bcryptjs');
 const path = require('path');
 const pug = require('pug');
 const {
-  Validator, ApiError, Response, Crypto, Mailer
+  ApiError,
+  Crypto,
+  Mailer,
+  Response,
+  Validator
 } = require('../../../utils');
 const {
   MessageCodeConstants,
@@ -111,7 +115,7 @@ const UserHelper = {
         lastName: requestBody.lastName,
         email: requestBody.email,
         team: requestBody.team,
-        phoneNumber: `${requestBody.phoneNumber}`,
+        phoneNumber: `${requestBody.phoneNumber || ''}` || null,
         whatsappNumber: `${requestBody.whatsappNumber || ''}` || null,
         deviceToken: requestBody.deviceToken,
         appVersion: requestBody.appVersion,
@@ -202,7 +206,8 @@ const UserHelper = {
         success: false,
         error: Response.sendError(
           message,
-          error
+          error,
+          code
         )
       };
     }

@@ -15,7 +15,7 @@ module.exports = Object.freeze({
   OTP_EXPIRED: 'OTP is Expired',
   OTP_DO_NOT_MATCH: 'OTP do not match',
   PASSWORD_UPDATED_SUCCESSFULLY: 'Password has been updated successfully',
-  UNAUTHORIZED_USER: 'Unauthorized User',
+  UNAUTHORIZED_USER: 'You are unauthorized',
   USER_CREATED: 'User Created Successfully', // TODO: This message will not be used in future
   EMPLOYEE: {
     FETCHED: 'Employees have been fetched successfully',

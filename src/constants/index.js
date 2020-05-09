@@ -7,6 +7,7 @@ const RolesConstants = require('./roles.constants');
 const StatusCodeConstants = require('./status-code.constants');
 const StatusConstants = require('./status.constants');
 const ValidationConstant = require('./validation.constants');
+const AccessConstants = require('./access-constants');
 
 module.exports = Object.freeze({
   DefaultValuesConstants,
@@ -17,5 +18,6 @@ module.exports = Object.freeze({
   RolesConstants,
   StatusCodeConstants,
   StatusConstants,
-  ValidationConstant
+  ValidationConstant,
+  AccessConstants
 });

@@ -109,9 +109,15 @@ module.exports = {
   deleteSupervisorById: async (req, res) => {
     try {
       const { id: userId } = req.params;
-      await UserService.deleteUserById(userId);
-      return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
-        MessageCodeConstants.SUPERVISOR.DELETED,
+      const deletedSupervisor = await UserService.deleteUserById(userId);
+      if (deletedSupervisor) {
+        return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+          MessageCodeConstants.SUPERVISOR.DELETED,
+          {},
+          StatusCodeConstants.SUCCESS
+        ));
+      } return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+        MessageCodeConstants.SUPERVISOR.ALREADY_DELETED,
         {},
         StatusCodeConstants.SUCCESS
       ));

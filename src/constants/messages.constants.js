@@ -26,7 +26,8 @@ module.exports = Object.freeze({
   SUPERVISOR: {
     FETCHED: 'Supervisors have been fetched successfully',
     UPDATED: 'Supervisor has been updated successfully',
-    DELETED: 'Supervisor has been deleted successfully'
+    DELETED: 'Supervisor has been deleted successfully',
+    ALREADY_DELETED: 'Supervisor has been already deleted'
   },
   HUMAN_RESOURCE: {
     CREATED: 'Human resource manager has been created successfully',

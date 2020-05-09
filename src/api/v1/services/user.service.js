@@ -17,7 +17,7 @@ const UserService = {
   /**
    * Find user by email or phone
    */
-  findUserByEmailOrPhone: async ({ email, phoneNumber }, userId = null) => {
+  findUserByEmailOrPhone: async ({ email = null, phoneNumber = null }, userId = null) => {
     if (!email && !phoneNumber) {
       return null;
     }
@@ -121,7 +121,13 @@ const UserService = {
    * Delete User By Id
    */
   deleteUserById: async (id, transaction = null) => User.destroy({
-    where: { id }, ...(transaction && { transaction })
+    where: {
+      [Op.and]: [
+        { id },
+        { deletedAt: { [Op.ne]: null } }
+      ]
+    },
+    ...(transaction && { transaction })
   }),
 
   /**

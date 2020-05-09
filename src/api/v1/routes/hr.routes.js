@@ -19,6 +19,8 @@ router.patch(
   MulterMiddleware.upload().single('profilePicture'),
   HrController.updateAHumanResourceById
 );
-router.delete('/:id', HrController.deleteHumanResourceById);
+router.delete('/:id',
+  AuthMiddleware.checkAuthByRole(AccessConstants.HUMAN_RESOURCE.DELETE),
+  HrController.deleteHumanResourceById);
 
 module.exports = router;

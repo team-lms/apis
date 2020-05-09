@@ -20,6 +20,13 @@ module.exports = Object.freeze({
     GET_ALL: [RolesConstants.ADMIN, RolesConstants.HR],
     UPDATE: [RolesConstants.ADMIN, RolesConstants.HR],
     DELETE: [RolesConstants.ADMIN, RolesConstants.HR]
+  }),
+
+  EMPLOYEE: Object.freeze({
+    CREATE: [RolesConstants.ADMIN, RolesConstants.HR],
+    GET_ALL: [RolesConstants.ADMIN, RolesConstants.HR],
+    UPDATE: [RolesConstants.ADMIN, RolesConstants.HR],
+    DELETE: [RolesConstants.ADMIN, RolesConstants.HR]
   })
 
 });

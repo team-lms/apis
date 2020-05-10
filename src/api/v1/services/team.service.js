@@ -52,7 +52,20 @@ const TeamsService = {
       where: { id },
       ...(transaction && { transaction })
     }
-  )
+  ),
+
+  /**
+   * Delete A Team
+   */
+  deleteATeam: async (id, transaction = null) => Team.destroy({
+    where: {
+      [Op.and]: [
+        { id },
+        { deletedAt: { [Op.eq]: null } }
+      ]
+    },
+    ...(transaction && { transaction })
+  })
 
 };
 

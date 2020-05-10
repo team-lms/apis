@@ -125,6 +125,35 @@ module.exports = {
         code
       ));
     }
+  },
+
+  /**
+ * Delete A Team
+ */
+
+  deleteATeam: async (req, res) => {
+    try {
+      const { id: teamId } = req.params;
+      const deletedTeam = await TeamsService.deleteATeam(teamId);
+      if (deletedTeam) {
+        return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+          MessageCodeConstants.TEAM.DELETED,
+          {},
+          StatusCodeConstants.SUCCESS
+        ));
+      }
+      return res.status(StatusCodeConstants.INTERNAL_SERVER_ERROR).json(Response.sendError(
+        MessageCodeConstants.TEAM.ALREADY_DELETED,
+        {},
+        StatusCodeConstants.INTERNAL_SERVER_ERROR
+      ));
+    } catch ({ message, code, error }) {
+      return res.status(code).json(Response.sendError(
+        message,
+        error,
+        code
+      ));
+    }
   }
 
 };

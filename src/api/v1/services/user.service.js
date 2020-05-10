@@ -124,7 +124,7 @@ const UserService = {
     where: {
       [Op.and]: [
         { id },
-        { deletedAt: { [Op.ne]: null } }
+        { deletedAt: { [Op.eq]: null } }
       ]
     },
     ...(transaction && { transaction })

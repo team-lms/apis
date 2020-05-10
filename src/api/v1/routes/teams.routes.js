@@ -17,4 +17,8 @@ router.patch('/:id',
   AuthMiddleware.checkAuthByRole(AccessConstants.TEAM.UPDATE),
   TeamController.updateATeam);
 
+router.delete('/:id',
+  AuthMiddleware.checkAuthByRole(AccessConstants.TEAM.DELETE),
+  TeamController.deleteATeam);
+
 module.exports = router;

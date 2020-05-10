@@ -13,4 +13,8 @@ router.post('/',
   AuthMiddleware.checkAuthByRole(AccessConstants.TEAM.CREATE),
   TeamController.createTeam);
 
+router.patch('/:id',
+  AuthMiddleware.checkAuthByRole(AccessConstants.TEAM.UPDATE),
+  TeamController.updateATeam);
+
 module.exports = router;

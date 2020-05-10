@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { Team, TeamAssociation } = require('../../../../models');
 // const TeamAssociationsService = require('./teamAssociations');
 
@@ -20,12 +21,15 @@ const TeamsService = {
   /**
    * Find Team by Team Name
    */
-  findTeamByTeamName: async (teamName) => {
+  findTeamByTeamName: async (teamName, teamId = null) => {
     if (!teamName) {
       return null;
     }
     return Team.findOne({
-      where: { teamName },
+      where: {
+        teamName,
+        ...(teamId && { id: { [Op.ne]: teamId } })
+      },
       paranoid: true
     });
   },

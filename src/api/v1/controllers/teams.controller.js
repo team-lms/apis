@@ -83,30 +83,48 @@ module.exports = {
         code
       ));
     }
-  }
+  },
 
-  // updateATeam: async (req, res) => {
-  //   try {
-  //     const reqBody = req.body;
-  //     const teamToBeUpdated = {
-  //       teamName: reqBody.teamName,
-  //       status: reqBody.status,
-  //       teamLeader: reqBody.teamLeader
-  //     };
-  //     const validationResult = Validator.validate(teamToBeUpdated, {
-  //       teamName: { presence: { allowEmpty: false } }
-  //     });
-  //     if (validationResult) {
-  //       throw new ApiError.ValidationError(MessageCodeConstants.ValidationError,
-  // validationResult);
-  //     }
-  //   } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
-  //     return res.status(code).json(Response.sendError(
-  //       message,
-  //       error,
-  //       code
-  //     ));
-  //   }
-  // }
+  /**
+   * Update A team
+   */
+
+  updateATeam: async (req, res) => {
+    try {
+      const reqBody = req.body;
+      const { id: teamId } = req.params;
+      const teamToBeUpdated = {
+        teamName: reqBody.teamName,
+        status: reqBody.status,
+        teamLeader: reqBody.teamLeader
+      };
+      const validationResult = Validator.validate(teamToBeUpdated, {
+        teamName: { presence: { allowEmpty: false } }
+      });
+
+      // validation result
+      if (validationResult) {
+        throw new ApiError.ValidationError(MessageCodeConstants.ValidationError, validationResult);
+      }
+
+      // find team if with same name exists
+      const foundTeam = await TeamsService.findTeamByTeamName(teamToBeUpdated.teamName, teamId);
+      if (foundTeam) {
+        throw new ApiError.ValidationError(MessageCodeConstants.TEAM.ALREADY_EXISTS);
+      }
+      await TeamsService.updateATeam(teamToBeUpdated, teamId);
+      return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+        MessageCodeConstants.TEAM.UPDATED,
+        {},
+        StatusCodeConstants.SUCCESS
+      ));
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      return res.status(code).json(Response.sendError(
+        message,
+        error,
+        code
+      ));
+    }
+  }
 
 };

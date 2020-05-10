@@ -38,7 +38,8 @@ module.exports = Object.freeze({
   TEAM: {
     FETCHED: 'Teams have been fetched successfully',
     ALREADY_EXISTS: 'Team already exists',
-    CREATED: 'Team has been created successfully'
+    CREATED: 'Team has been created successfully',
+    UPDATED: 'Team has been successfully updated'
   },
   LEAVES: {
     UPDATED_ALL: 'Leaves have been updated for all users'

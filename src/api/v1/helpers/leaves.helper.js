@@ -1,5 +1,6 @@
 const pug = require('pug');
 const path = require('path');
+const moment = require('moment');
 const {
   StatusCodeConstants,
   RolesConstants,
@@ -26,6 +27,10 @@ module.exports = {
 
       if (validationResult) {
         throw new ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR, validationResult);
+      }
+      if (moment().isSameOrAfter(userWhoAppliedLeave.fromDate)
+        || moment().isSameOrAfter(userWhoAppliedLeave.toDate)) {
+        throw new ApiError.ValidationError(MessageCodeConstants.APPLIED_DATE);
       }
       let usersToBeMailed = [];
 

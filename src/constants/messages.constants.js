@@ -18,6 +18,7 @@ module.exports = Object.freeze({
   UNAUTHORIZED_USER: 'You are unauthorized',
   USER_CREATED: 'User Created Successfully', // TODO: This message will not be used in future
   LEAVE_APPLIED: 'Leave has been applied successfully',
+  APPLIED_DATE: 'Applied Date is invalid',
   EMPLOYEE: {
     FETCHED: 'Employees have been fetched successfully',
     CREATED: 'Employee has been created successfully',

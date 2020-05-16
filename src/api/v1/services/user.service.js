@@ -35,6 +35,17 @@ const UserService = {
   },
 
   /**
+   * find User By id
+   */
+  findUserById: async ({ userId }) => User.findOne({
+    where: {
+      id: userId
+    },
+    paranoid: false,
+    attributes: { exclude: ['deletedAt'] }
+  }),
+
+  /**
    * Count all users
    */
   countUsers: async () => User.count(
@@ -111,7 +122,7 @@ const UserService = {
         ]
       },
       order: [[sortByTerm, sortType]],
-      offset,
+      ...(offset && offset),
       limit,
       includes: TeamAssociation
     });
@@ -137,7 +148,14 @@ const UserService = {
   updateLeaveByRole: async (role, casualLeaves, transaction = null) => User.update(
     { casualLeaves: sequelize.literal('casualLeaves + 1') },
     { where: { role }, ...(transaction && { transaction }) }
-  )
+  ),
+  /**
+   * Get All Users based on their roles with no filters
+   */
+
+  getAllUsersOfARole: async (role) => User.findAll({
+    where: { role }
+  })
 
 };
 module.exports = UserService;

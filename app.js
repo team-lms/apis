@@ -8,6 +8,17 @@ require('dotenv').config();
 
 const app = express();
 
+// Redirect to https if not on https
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    if (req.header('x-forwarded-proto') !== 'https') {
+      res.redirect(`https://${req.header('host')}${req.url}`);
+    } else {
+      next();
+    }
+  });
+}
+
 app.use(morgan(':method : url : status :user-agent - :response-time ms'));
 app.use(cors());
 app.use(bodyParser.json());

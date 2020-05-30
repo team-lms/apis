@@ -8,6 +8,8 @@ const StatusCodeConstants = require('./status-code.constants');
 const StatusConstants = require('./status.constants');
 const ValidationConstant = require('./validation.constants');
 const AccessConstants = require('./access-constants');
+const SexConstants = require('./sex.constants');
+const MaritalStatusConstants = require('./marital-status.constants');
 
 module.exports = Object.freeze({
   DefaultValuesConstants,
@@ -19,5 +21,7 @@ module.exports = Object.freeze({
   StatusCodeConstants,
   StatusConstants,
   ValidationConstant,
-  AccessConstants
+  AccessConstants,
+  SexConstants,
+  MaritalStatusConstants
 });

@@ -107,21 +107,24 @@ const UserHelper = {
    * Create A User
    */
 
-  createAUser: async (req) => {
+  createAUser: async (req, role) => {
     try {
       const requestBody = req.body;
       const userToBeCreated = {
         firstName: requestBody.firstName,
+        middleName: requestBody.middleName,
         lastName: requestBody.lastName,
         email: requestBody.email,
         team: requestBody.team,
         phoneNumber: `${requestBody.phoneNumber || ''}` || null,
         whatsappNumber: `${requestBody.whatsappNumber || ''}` || null,
+        dateOfBirth: requestBody.dateOfBirth,
+        address: requestBody.address,
         deviceToken: requestBody.deviceToken,
         appVersion: requestBody.appVersion,
         password: requestBody.password,
         designation: requestBody.designation,
-        role: requestBody.role,
+        role,
         status: requestBody.status
       };
       const validationResult = Validator.validate(userToBeCreated, {
@@ -144,7 +147,12 @@ const UserHelper = {
             message: MessageCodeConstants.IS_NOT_VALID
           }
         },
-        team: { presence: { allowEmpty: false } }
+        team: { presence: { allowEmpty: false } },
+        dateOfBirth: {
+          presence: { allowEmpty: false },
+          datetime: true
+        },
+        address: { presence: { allowEmpty: false } }
       });
       if (validationResult) {
         throw new ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR, validationResult);

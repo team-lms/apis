@@ -135,11 +135,11 @@ module.exports = {
    */
   createASupervisor: async (req, res) => {
     try {
-      const result = await UserHelper.createAUser(req);
+      const result = await UserHelper.createAUser(req, RolesConstants.SUPERVISOR);
       if (result && result.success) {
         return res.status(StatusCodeConstants.SUCCESS).json(
           Response.sendSuccess(
-            MessageCodeConstants.SUPERVISOR.SUPERVISOR_CREATED,
+            MessageCodeConstants.SUPERVISOR.CREATED,
             result.data,
             StatusCodeConstants.SUCCESS
           )

@@ -1,6 +1,5 @@
 const { Op } = require('sequelize');
 const { Team, TeamAssociation } = require('../../../../models');
-const { StatusConstants } = require('../../../constants');
 
 const TeamsService = {
 
@@ -17,10 +16,7 @@ const TeamsService = {
       {
         model: TeamAssociation,
         as: 'teamAssociations',
-        attributes: { exclude: ['updatedAt', 'deletedAt'] },
-        where: {
-          status: StatusConstants.ACTIVE
-        }
+        attributes: { exclude: ['updatedAt', 'deletedAt'] }
       }],
     distinct: true
   }),

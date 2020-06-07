@@ -12,7 +12,9 @@ const {
   MessageCodeConstants,
   RolesConstants,
   StatusCodeConstants,
-  ValidationConstant
+  ValidationConstant,
+  SexConstants,
+  MaritalStatusConstants
 } = require('../../../constants');
 
 const { UserService, EmployeeService } = require('../services');
@@ -107,22 +109,31 @@ const UserHelper = {
    * Create A User
    */
 
-  createAUser: async (req) => {
+  createAUser: async (req, role) => {
     try {
       const requestBody = req.body;
       const userToBeCreated = {
         firstName: requestBody.firstName,
+        middleName: requestBody.middleName,
         lastName: requestBody.lastName,
         email: requestBody.email,
-        team: requestBody.team,
         phoneNumber: `${requestBody.phoneNumber || ''}` || null,
         whatsappNumber: `${requestBody.whatsappNumber || ''}` || null,
+        dateOfBirth: requestBody.dateOfBirth,
+        address: requestBody.address,
+        pinCode: requestBody.pinCode,
+        sex: requestBody.sex,
+        maritalStatus: requestBody.maritalStatus,
+        nationality: requestBody.nationality,
+        hiredOn: requestBody.hiredOn,
         deviceToken: requestBody.deviceToken,
+        team: requestBody.team,
         appVersion: requestBody.appVersion,
         password: requestBody.password,
         designation: requestBody.designation,
-        role: requestBody.role,
-        status: requestBody.status
+        role,
+        status: requestBody.status,
+        jobType: requestBody.jobType
       };
       const validationResult = Validator.validate(userToBeCreated, {
         firstName: { presence: { allowEmpty: false } },
@@ -144,7 +155,27 @@ const UserHelper = {
             message: MessageCodeConstants.IS_NOT_VALID
           }
         },
-        team: { presence: { allowEmpty: false } }
+        team: { presence: { allowEmpty: false } },
+        dateOfBirth: { presence: { allowEmpty: false } },
+        address: { presence: { allowEmpty: false } },
+        pinCode: { presence: { allowEmpty: false } },
+        sex: {
+          presence: { allowEmpty: false },
+          inclusion: {
+            within: Object.keys(SexConstants).map((key) => SexConstants[key]),
+            message: MessageCodeConstants.IS_NOT_VALID
+          }
+        },
+        maritalStatus: {
+          presence: { allowEmpty: false },
+          inclusion: {
+            within: Object.keys(MaritalStatusConstants).map((key) => MaritalStatusConstants[key]),
+            message: MessageCodeConstants.IS_NOT_VALID
+          }
+        },
+        nationality: { presence: { allowEmpty: false } },
+        hiredOn: { presence: { allowEmpty: false } },
+        jobType: { presence: { allowEmpty: false } }
       });
       if (validationResult) {
         throw new ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR, validationResult);

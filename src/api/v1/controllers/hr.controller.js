@@ -45,7 +45,7 @@ module.exports = {
 
   createNewHumanResource: async (req, res) => {
     try {
-      const result = await UserHelper.createAUser(req);
+      const result = await UserHelper.createAUser(req, RolesConstants.HR);
       if (result && result.success) {
         return res.status(StatusCodeConstants.SUCCESS).json(
           Response.sendSuccess(

@@ -1,7 +1,9 @@
 const {
   DefaultValuesConstants,
   RolesConstants,
-  StatusConstants
+  StatusConstants,
+  SexConstants,
+  MaritalStatusConstants
 } = require('../src/constants');
 
 module.exports = (sequelize, DataTypes) => {
@@ -13,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     firstName: {
       allowNull: false,
+      type: DataTypes.STRING(50)
+    },
+    middleName: {
       type: DataTypes.STRING(50)
     },
     lastName: {
@@ -31,6 +36,44 @@ module.exports = (sequelize, DataTypes) => {
     whatsappNumber: {
       unique: true,
       type: DataTypes.STRING(10)
+    },
+    dateOfBirth: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    address: {
+      allowNull: false,
+      type: DataTypes.STRING(100)
+    },
+    pinCode: {
+      allowNull: false,
+      type: DataTypes.STRING(50)
+    },
+    sex: {
+      allowNull: false,
+      type: DataTypes.ENUM(
+        SexConstants.MALE,
+        SexConstants.FEMALE,
+        SexConstants.OTHER
+      )
+    },
+    maritalStatus: {
+      allowNull: false,
+      type: DataTypes.ENUM(
+        MaritalStatusConstants.SINGLE,
+        MaritalStatusConstants.MARRIED,
+        MaritalStatusConstants.WIDOWED,
+        MaritalStatusConstants.SEPARATED,
+        MaritalStatusConstants.DIVORCED
+      )
+    },
+    nationality: {
+      allowNull: false,
+      type: DataTypes.STRING(50)
+    },
+    hiredOn: {
+      allowNull: false,
+      type: DataTypes.DATE
     },
     deviceToken: {
       type: DataTypes.STRING(50)

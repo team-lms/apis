@@ -1,6 +1,5 @@
 const { Op } = require('sequelize');
 const { Team, TeamAssociation } = require('../../../../models');
-const { StatusConstants } = require('../../../constants');
 
 const TeamsService = {
 

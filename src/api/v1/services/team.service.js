@@ -17,10 +17,7 @@ const TeamsService = {
       {
         model: TeamAssociation,
         as: 'teamAssociations',
-        attributes: { exclude: ['updatedAt', 'deletedAt'] },
-        where: {
-          status: StatusConstants.ACTIVE
-        }
+        attributes: { exclude: ['updatedAt', 'deletedAt'] }
       }],
     distinct: true
   }),

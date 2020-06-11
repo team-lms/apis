@@ -21,7 +21,6 @@ const TeamsService = {
     distinct: true
   }),
 
-
   /**
    * Find Team by Team Name
    */

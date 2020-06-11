@@ -17,7 +17,6 @@ router.patch('/:id',
   AuthMiddleware.checkAuthByRole(AccessConstants.SUPERVISOR.UPDATE),
   SupervisorController.updateSupervisorById);
 
-
 router.delete('/:id',
   AuthMiddleware.checkAuthByRole(AccessConstants.SUPERVISOR.DELETE),
   SupervisorController.deleteSupervisorById);

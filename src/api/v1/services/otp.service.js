@@ -61,5 +61,4 @@ const OtpService = {
 
 };
 
-
 module.exports = OtpService;

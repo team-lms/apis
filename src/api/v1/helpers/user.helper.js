@@ -127,7 +127,7 @@ const UserHelper = {
         nationality: requestBody.nationality,
         hiredOn: requestBody.hiredOn,
         deviceToken: requestBody.deviceToken,
-        team: requestBody.team,
+        team: requestBody.team.id,
         appVersion: requestBody.appVersion,
         password: requestBody.password,
         designation: requestBody.designation,

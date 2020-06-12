@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "root",
-    "database": "Leave_Management_System_Production",
+    "database": "Leave_Management_System",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },

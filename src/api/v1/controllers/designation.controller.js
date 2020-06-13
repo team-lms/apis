@@ -1,6 +1,11 @@
 const Chalk = require('chalk');
 const { Response, Validator, ApiError } = require('../../../utils');
-const { StatusConstants, StatusCodeConstants, MessageCodeConstants } = require('../../../constants');
+const {
+  StatusConstants,
+  StatusCodeConstants,
+  MessageCodeConstants,
+  QueryConstants
+} = require('../../../constants');
 const { DesignationService } = require('../services');
 
 module.exports = {
@@ -48,6 +53,35 @@ module.exports = {
         message,
         code,
         error
+      ));
+    }
+  },
+
+  /**
+   * Get All Designation
+   */
+  getAllDesignation: async (req, res) => {
+    try {
+      const queryFilters = req.query;
+      const filters = {
+        searchTerm: queryFilters.searchTerm || QueryConstants.SEARCH_TERM,
+        searchBy: queryFilters.searchBy || QueryConstants.SEARCH_BY,
+        offset: Number(queryFilters.offset) || QueryConstants.OFFSET,
+        limit: Number(queryFilters.limit) || QueryConstants.LIMIT,
+        sortType: queryFilters.sortType || QueryConstants.SORT_TYPE[0],
+        sortBy: queryFilters.sortBy || QueryConstants.SORT_BY
+      };
+      const designations = await DesignationService.getAllDesignations(filters);
+      return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+        MessageCodeConstants.FETCHED,
+        designations,
+        StatusCodeConstants.SUCCESS
+      ));
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      return res.status(code).json(Response.sendError(
+        message,
+        error,
+        code
       ));
     }
   }

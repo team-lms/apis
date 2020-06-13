@@ -51,6 +51,7 @@ module.exports = Object.freeze({
     UPDATED_ALL: 'Leaves have been updated for all users'
   },
   DESIGNATION: {
+    FETCHED: 'Designations have been fetched successfully',
     CREATED: 'Designation has been created successfully'
   }
 

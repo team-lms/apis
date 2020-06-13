@@ -23,6 +23,33 @@ const DesignationService = {
     designationToBeCreated, {
       ...(transaction && { transaction })
     }
-  )
+  ),
+
+  /**
+   * Get Designation List
+   */
+  getAllDesignations: async ({
+    offset, limit, sortBy, sortType, searchBy, searchTerm
+  }) => {
+    let searchCriteria = {};
+    searchCriteria = {
+      ...((searchBy && searchTerm) && {
+        [searchBy]: {
+          [Op.substring]: searchTerm
+        }
+      })
+    };
+    return Designation.findAndCountAll({
+      where: {
+        [Op.and]: [
+          { status: StatusConstants.ACTIVE },
+          searchCriteria
+        ]
+      },
+      order: [[sortBy, sortType]],
+      offset,
+      limit
+    });
+  }
 };
 module.exports = DesignationService;

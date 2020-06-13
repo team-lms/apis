@@ -19,6 +19,7 @@ module.exports = Object.freeze({
   USER_CREATED: 'User Created Successfully', // TODO: This message will not be used in future
   LEAVE_APPLIED: 'Leave has been applied successfully',
   APPLIED_DATE: 'Applied Date is invalid',
+  DESIGNATION_ALREADY_EXISTS: 'Designation already exists',
   EMPLOYEE: {
     FETCHED: 'Employees have been fetched successfully',
     CREATED: 'Employee has been created successfully',
@@ -48,6 +49,9 @@ module.exports = Object.freeze({
   },
   LEAVES: {
     UPDATED_ALL: 'Leaves have been updated for all users'
+  },
+  DESIGNATION: {
+    CREATED: 'Designation has been created successfully'
   }
 
 });

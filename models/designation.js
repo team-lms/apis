@@ -2,7 +2,7 @@
 const { StatusConstants } = require('../src/constants');
 
 module.exports = (sequelize, DataTypes) => {
-  const designation = sequelize.define('designation', {
+  const Designation = sequelize.define('Designation', {
     id: {
       allowNull: false,
       primaryKey: true,
@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     name: {
       allowNull: false,
+      unique: true,
       type: DataTypes.STRING(50)
     },
     status: {
@@ -21,5 +22,5 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, { paranoid: true });
 
-  return designation;
+  return Designation;
 };

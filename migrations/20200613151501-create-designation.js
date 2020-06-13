@@ -1,7 +1,7 @@
 const { StatusConstants } = require('../src/constants');
 
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('designations', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Designations', {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -10,6 +10,7 @@ module.exports = {
     },
     name: {
       allowNull: false,
+      unique: true,
       type: Sequelize.STRING(50)
     },
     status: {
@@ -24,6 +25,9 @@ module.exports = {
     },
     updatedAt: {
       allowNull: false,
+      type: Sequelize.DATE
+    },
+    deletedAt: {
       type: Sequelize.DATE
     }
   }),

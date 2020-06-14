@@ -32,7 +32,8 @@ module.exports = Object.freeze({
   DESIGNATION: Object.freeze({
     CREATE: [RolesConstants.ADMIN],
     GET_ALL: [RolesConstants.ADMIN, RolesConstants.HR],
-    UPDATE: [RolesConstants.ADMIN, RolesConstants.HR]
+    UPDATE: [RolesConstants.ADMIN, RolesConstants.HR],
+    DELETE: [RolesConstants.ADMIN]
   })
 
 });

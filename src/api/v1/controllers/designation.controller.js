@@ -138,5 +138,25 @@ module.exports = {
         code
       ));
     }
+  },
+  /**
+   * Delete Designation
+   */
+  deleteDesignationById: async (req, res) => {
+    try {
+      const { id } = req.params;
+      await DesignationService.deleteDesignationById(id);
+      return res.status(StatusCodeConstants.SUCCESS).json(Response.sendError(
+        MessageCodeConstants.DESIGNATION.DELETED,
+        {},
+        StatusCodeConstants.SUCCESS
+      ));
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      return res.status(code).json(Response.sendError(
+        message,
+        error,
+        code
+      ));
+    }
   }
 };

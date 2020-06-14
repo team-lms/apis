@@ -61,6 +61,20 @@ const DesignationService = {
     transaction = null) => Designation.update(
     designationToBeUpdated,
     { where: { id }, ...(transaction && { transaction }) }
+  ),
+
+  /**
+   * Delete Designation
+   */
+  deleteDesignationById: async (id) => Designation.destroy(
+    {
+      where: {
+        [Op.and]: [
+          { id },
+          { deletedAt: { [Op.eq]: null } }
+        ]
+      }
+    }
   )
 };
 module.exports = DesignationService;

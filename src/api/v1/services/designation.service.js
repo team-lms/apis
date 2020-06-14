@@ -7,12 +7,14 @@ const DesignationService = {
   /**
    * Find Designation on the basis of name
    */
-  findDesignationByName: async ({ name, status = StatusConstants.ACTIVE }) => Designation.findOne({
+  findDesignationByName: async ({ name, status = StatusConstants.ACTIVE },
+    userId = null) => Designation.findOne({
     where: {
       [Op.and]: [
         { ...(name && { name }) },
         { ...(status && { status }) }
-      ]
+      ],
+      ...(userId && { id: { [Op.ne]: userId } })
     }
   }),
 
@@ -50,6 +52,15 @@ const DesignationService = {
       offset,
       limit
     });
-  }
+  },
+
+  /**
+   * Update Designation by Id
+   */
+  updateDesignationById: async (designationToBeUpdated, id,
+    transaction = null) => Designation.update(
+    designationToBeUpdated,
+    { where: { id }, ...(transaction && { transaction }) }
+  )
 };
 module.exports = DesignationService;

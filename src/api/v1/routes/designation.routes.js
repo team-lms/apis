@@ -10,7 +10,11 @@ router.post('/',
   DesignationController.createADesignation);
 
 router.get('/',
-  router.use(AuthMiddleware.checkAuthByRole(AccessConstants.DESIGNATION.GET_ALL),
-    DesignationController.getAllDesignation));
+  AuthMiddleware.checkAuthByRole(AccessConstants.DESIGNATION.GET_ALL),
+  DesignationController.getAllDesignation);
+
+router.put('/:id',
+  AuthMiddleware.checkAuthByRole(AccessConstants.DESIGNATION.UPDATE),
+  DesignationController.updateDesignationById);
 
 module.exports = router;

@@ -1,5 +1,9 @@
 const Chalk = require('chalk');
-const { Response, Validator, ApiError } = require('../../../utils');
+const {
+  Response,
+  Validator,
+  ApiError
+} = require('../../../utils');
 const {
   StatusConstants,
   StatusCodeConstants,
@@ -19,7 +23,7 @@ module.exports = {
         name: reqBody.name,
         status: reqBody.status
       };
-      const validationResult = await Validator.validate(designationToBeCreated, {
+      const validationResult = Validator.validate(designationToBeCreated, {
         name: { presence: { allowEmpty: false } },
         status: {
           presence: { allowEmpty: false },
@@ -75,6 +79,56 @@ module.exports = {
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
         MessageCodeConstants.FETCHED,
         designations,
+        StatusCodeConstants.SUCCESS
+      ));
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      return res.status(code).json(Response.sendError(
+        message,
+        error,
+        code
+      ));
+    }
+  },
+  /**
+   * Designation To be Updated
+   */
+
+  updateDesignationById: async (req, res) => {
+    try {
+      const reqBody = req.body;
+      const { id } = req.params;
+      const designationToBeUpdated = {
+        ...(reqBody.name && { name: reqBody.name }),
+        ...(reqBody.status && { status: reqBody.status })
+      };
+      const validationResult = Validator.validate(designationToBeUpdated, {
+        name: { presence: { allowEmpty: false } },
+        status: {
+          presence: { allowEmpty: false },
+          inclusion: {
+            within: Object.keys(StatusConstants).map((key) => StatusConstants[key]),
+            message: MessageCodeConstants.IS_NOT_VALID
+          }
+        }
+      });
+      if (validationResult) {
+        throw new ApiError.ResourceAlreadyExistError(
+          MessageCodeConstants.VALIDATION_ERROR, validationResult
+        );
+      }
+
+      const alreadyDesignation = await DesignationService.findDesignationByName(
+        designationToBeUpdated, id
+      );
+      if (alreadyDesignation) {
+        throw new ApiError.ResourceAlreadyExistError(
+          MessageCodeConstants.DESIGNATION_ALREADY_EXISTS
+        );
+      }
+      await DesignationService.updateDesignationById(designationToBeUpdated, id);
+      return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+        MessageCodeConstants.DESIGNATION.UPDATED,
+        {},
         StatusCodeConstants.SUCCESS
       ));
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {

@@ -52,7 +52,8 @@ module.exports = Object.freeze({
   },
   DESIGNATION: {
     FETCHED: 'Designations have been fetched successfully',
-    CREATED: 'Designation has been created successfully'
+    CREATED: 'Designation has been created successfully',
+    UPDATED: 'Designation has been updated successfully'
   }
 
 });

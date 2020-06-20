@@ -50,7 +50,7 @@ module.exports = {
       const teamToBeCreated = {
         teamName: reqBody.teamName,
         status: reqBody.status,
-        teamLeader: reqBody.teamLeader
+        supervisorId: reqBody.supervisorId
       };
       const validationResult = Validator.validate(teamToBeCreated, {
         teamName: { presence: { allowEmpty: false } }
@@ -65,15 +65,13 @@ module.exports = {
           MessageCodeConstants.TEAM.ALREADY_EXISTS
         );
       }
-      if (teamToBeCreated.teamLeader) {
-        await TeamsHelper.assignATeamWithTeamLeaderAssigned(teamToBeCreated);
-      } else {
-        await TeamsService.createTeam(teamToBeCreated);
-      }
+      const createdTeam = teamToBeCreated.supervisorId
+        ? await TeamsHelper.createTeamWithSupervisorAssigned(teamToBeCreated)
+        : await TeamsService.createTeam(teamToBeCreated);
 
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
         MessageCodeConstants.TEAM.CREATED,
-        {},
+        createdTeam,
         StatusCodeConstants.SUCCESS
       ));
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {

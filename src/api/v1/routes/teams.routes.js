@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const { TeamController } = require('../controllers');
-const { AuthMiddleware } = require('../middlewares');
 const { AccessConstants } = require('../../../constants');
+const { AuthMiddleware } = require('../middlewares');
+const { TeamController } = require('../controllers');
 
 router.use(AuthMiddleware.checkAuth);
 

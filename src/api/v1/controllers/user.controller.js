@@ -1,32 +1,31 @@
 const Chalk = require('chalk');
 const { Response } = require('../../../utils');
-const {
-  MessageCodeConstants,
-  StatusCodeConstants,
-  RolesConstants
-} = require('../../../constants');
-
-const { UserHelper } = require('../helpers');
+const { StatusCodeConstants } = require('../../../constants');
+const { CloudinaryHelper } = require('../helpers');
+const { UserService } = require('../services');
 
 module.exports = {
-  /**
-   * To create a user.
-   */
 
-  // TODO: Something to do here
-  createUser: async (req, res) => {
+  /**
+   * Update the profile picture of the user
+   */
+  updateProfilePicture: async (req, res) => {
     try {
-      const result = await UserHelper.createAUser(req, RolesConstants.EMPLOYEE);
-      if (result && result.success) {
-        return res.status(StatusCodeConstants.SUCCESS).json(
-          Response.sendSuccess(
-            MessageCodeConstants.EMPLOYEE.CREATED,
-            result.data,
-            StatusCodeConstants.SUCCESS
-          )
-        );
+      const { id: userId } = req.params;
+      let profilePicture = null;
+      if (req.file && req.file.path) {
+        ({ secure_url: profilePicture } = await CloudinaryHelper.upload({
+          filePath: req.file.path
+        }));
       }
-      return res.status(result.error.responseCode).json(result.error);
+      if (profilePicture) {
+        await UserService.updateUserById({ profilePicture }, userId);
+      } else {
+        throw new Error('There was no profile picture');
+      }
+      return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+        'User profile updated successfully'
+      ));
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       Chalk.red(error);
       return res.status(code).json(Response.sendError(

@@ -143,7 +143,7 @@ const UserService = {
             as: 'users',
             through: { attributes: [] },
             where: { role: RolesConstants.SUPERVISOR },
-            attributes: ['id', 'firstName', 'middleName', 'lastName', 'email', 'phoneNumber', 'role'],
+            attributes: ['id', 'firstName', 'middleName', 'lastName', 'email', 'phoneNumber', 'role', 'designation'],
             required: false
           }]
         }]

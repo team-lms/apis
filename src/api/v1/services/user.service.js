@@ -1,8 +1,13 @@
 const { Op, Sequelize } = require('sequelize');
 const bcrypt = require('bcryptjs');
-const { User, sequelize, TeamAssociation } = require('../../../../models');
+const {
+  User,
+  sequelize,
+  Team,
+  TeamAssociation
+} = require('../../../../models');
 const OtpService = require('./otp.service');
-const { StatusConstants } = require('../../../constants');
+const { StatusConstants, RolesConstants } = require('../../../constants');
 
 const UserService = {
 
@@ -122,9 +127,27 @@ const UserService = {
         ]
       },
       order: [[sortByTerm, sortType]],
-      ...(offset && offset),
+      offset,
       limit,
-      includes: TeamAssociation
+      include: [{
+        model: TeamAssociation,
+        as: 'teamAssociation',
+        attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt', 'UserId'] },
+        include: [{
+          model: Team,
+          as: 'team',
+          attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+          required: false,
+          include: [{
+            model: User,
+            as: 'users',
+            through: { attributes: [] },
+            where: { role: RolesConstants.SUPERVISOR },
+            attributes: ['id', 'firstName', 'middleName', 'lastName', 'email', 'phoneNumber', 'role'],
+            required: false
+          }]
+        }]
+      }]
     });
   },
 

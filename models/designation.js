@@ -1,4 +1,3 @@
-
 const { StatusConstants } = require('../src/constants');
 
 module.exports = (sequelize, DataTypes) => {

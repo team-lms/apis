@@ -1,10 +1,10 @@
 const { Op } = require('sequelize');
-const { Team, TeamAssociation } = require('../../../../models');
+const { Team, User } = require('../../../../models');
 
-const TeamsService = {
+module.exports = {
 
   /**
-   * Get Team List
+   * Get the teams
    */
   getAllTeams: async ({
     offset, limit, sortBy, sortType
@@ -12,17 +12,17 @@ const TeamsService = {
     order: [[sortBy, sortType]],
     offset,
     limit,
-    include: [
-      {
-        model: TeamAssociation,
-        as: 'teamAssociations',
-        attributes: { exclude: ['updatedAt', 'deletedAt'] }
-      }],
-    distinct: true
+    attributes: { exclude: ['updatedAt', 'deletedAt'] },
+    include: [{
+      model: User,
+      as: 'users',
+      through: { attributes: [] },
+      attributes: ['id', 'firstName', 'middleName', 'lastName', 'email', 'phoneNumber', 'role']
+    }]
   }),
 
   /**
-   * Find Team by Team Name
+   * Get team by team name
    */
   findTeamByTeamName: async (teamName, teamId = null) => {
     if (!teamName) {
@@ -38,17 +38,15 @@ const TeamsService = {
   },
 
   /**
-   * Create a Team
+   * Create a new team
    */
-
   createTeam: async (teamToBeCreated, transaction = null) => Team.create(teamToBeCreated, {
     ...(transaction && { transaction })
   }),
 
   /**
-   * Update A Team
+   * Update a team by id
    */
-
   updateATeam: async (teamToBeUpdated, id, transaction) => Team.update(
     teamToBeUpdated,
     {
@@ -58,7 +56,7 @@ const TeamsService = {
   ),
 
   /**
-   * Delete A Team
+   * Delete a team by id
    */
   deleteATeam: async (id, transaction = null) => Team.destroy({
     where: {
@@ -71,5 +69,3 @@ const TeamsService = {
   })
 
 };
-
-module.exports = TeamsService;

@@ -5,20 +5,28 @@ const { AccessConstants } = require('../../../constants');
 
 router.use(AuthMiddleware.checkAuth);
 
-router.get('/',
+router.get(
+  '/',
   AuthMiddleware.checkAuthByRole(AccessConstants.TEAM.GET_ALL),
-  TeamController.getAllTeams);
+  TeamController.getAllTeams
+);
 
-router.post('/',
+router.post(
+  '/',
   AuthMiddleware.checkAuthByRole(AccessConstants.TEAM.CREATE),
-  TeamController.createTeam);
+  TeamController.createTeam
+);
 
-router.patch('/:id',
+router.patch(
+  '/:id',
   AuthMiddleware.checkAuthByRole(AccessConstants.TEAM.UPDATE),
-  TeamController.updateATeam);
+  TeamController.updateATeam
+);
 
-router.delete('/:id',
+router.delete(
+  '/:id',
   AuthMiddleware.checkAuthByRole(AccessConstants.TEAM.DELETE),
-  TeamController.deleteATeam);
+  TeamController.deleteATeam
+);
 
 module.exports = router;

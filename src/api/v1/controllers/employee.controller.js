@@ -16,7 +16,8 @@ module.exports = {
    */
   createEmployee: async (req, res) => {
     try {
-      const result = await UserHelper.createUser(req, RolesConstants.EMPLOYEE);
+      req.body.role = RolesConstants.EMPLOYEE;
+      const result = await UserHelper.createUser(req);
       if (result && result.success) {
         return res.status(StatusCodeConstants.SUCCESS).json(
           Response.sendSuccess(

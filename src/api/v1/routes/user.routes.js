@@ -5,11 +5,12 @@ const { AccessConstants } = require('../../../constants');
 
 router.use(AuthMiddleware.checkAuth);
 
-router.patch(
+router.put(
   '/:id',
-  AuthMiddleware.checkAuthByRole(AccessConstants.EMPLOYEE.UPDATE),
+  AuthMiddleware.checkAuthByRole(AccessConstants.USER.UPDATE_PROFILE_PICTURE),
+  MulterMiddleware.checkAndCreateDir,
   MulterMiddleware.upload().single('profilePicture'),
-  UserController.updateEmployee
+  UserController.updateProfilePicture
 );
 
 module.exports = router;

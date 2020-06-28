@@ -17,7 +17,7 @@ const {
   MaritalStatusConstants
 } = require('../../../constants');
 
-const { UserService, TeamsService, TeamAssociationService } = require('../services');
+const { UserService, TeamsService } = require('../services');
 const { sequelize } = require('../../../../models');
 
 const UserHelper = {
@@ -25,31 +25,31 @@ const UserHelper = {
   /**
    * Create a new user
    */
-  createUser: async (req, role) => {
+  createUser: async (req) => {
     try {
-      const requestBody = req.body;
+      const reqBody = req.body;
       const userToBeCreated = {
-        firstName: requestBody.firstName,
-        middleName: requestBody.middleName,
-        lastName: requestBody.lastName,
-        email: requestBody.email,
-        phoneNumber: `${requestBody.phoneNumber || ''}` || null,
-        whatsappNumber: `${requestBody.whatsappNumber || ''}` || null,
-        dateOfBirth: requestBody.dateOfBirth,
-        address: requestBody.address,
-        pinCode: requestBody.pinCode,
-        sex: requestBody.sex,
-        maritalStatus: requestBody.maritalStatus,
-        nationality: requestBody.nationality,
-        hiredOn: requestBody.hiredOn,
-        deviceToken: requestBody.deviceToken,
-        teamId: requestBody.teamId,
-        appVersion: requestBody.appVersion,
-        password: requestBody.password,
-        designation: requestBody.designation,
-        role,
-        status: requestBody.status,
-        jobType: requestBody.jobType
+        firstName: reqBody.firstName,
+        middleName: reqBody.middleName,
+        lastName: reqBody.lastName,
+        email: reqBody.email,
+        phoneNumber: `${reqBody.phoneNumber || ''}` || null,
+        whatsappNumber: `${reqBody.whatsappNumber || ''}` || null,
+        dateOfBirth: reqBody.dateOfBirth,
+        address: reqBody.address,
+        pinCode: reqBody.pinCode,
+        sex: reqBody.sex,
+        maritalStatus: reqBody.maritalStatus,
+        nationality: reqBody.nationality,
+        hiredOn: reqBody.hiredOn,
+        deviceToken: reqBody.deviceToken,
+        teamId: reqBody.teamId,
+        appVersion: reqBody.appVersion,
+        password: reqBody.password,
+        designation: reqBody.designation,
+        role: reqBody.role,
+        status: reqBody.status,
+        jobType: reqBody.jobType
       };
       const validationResult = Validator.validate(userToBeCreated, {
         firstName: { presence: { allowEmpty: false } },
@@ -236,13 +236,13 @@ const UserHelper = {
       const createdUser = await UserService.createUser(employeeToBeCreated, transaction);
       if (employeeToBeCreated.teamId) {
         const foundTeam = await TeamsService.getTeamById(employeeToBeCreated.teamId);
-        const teamToBeAssociated = {
-          userId: createdUser.id,
-          isSupervisor: createdUser.role === 'Supervisor',
-          teamId: foundTeam.id,
-          status: foundTeam.status
-        };
-        await TeamAssociationService.associateATeam(teamToBeAssociated, transaction);
+        await foundTeam.addUser(createdUser, {
+          transaction,
+          through: {
+            isSupervisor: createdUser.role === 'Supervisor',
+            status: foundTeam.status
+          }
+        });
       }
       transaction.commit();
       const user = {

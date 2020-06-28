@@ -1,6 +1,6 @@
 const Chalk = require('chalk');
-const { Response } = require('../../../utils');
-const { StatusCodeConstants } = require('../../../constants');
+const { Response, ApiError } = require('../../../utils');
+const { StatusCodeConstants, MessageCodeConstants } = require('../../../constants');
 const { CloudinaryHelper } = require('../helpers');
 const { UserService } = require('../services');
 
@@ -18,13 +18,12 @@ module.exports = {
           filePath: req.file.path
         }));
       }
-      if (profilePicture) {
-        await UserService.updateUserById({ profilePicture }, userId);
-      } else {
-        throw new Error('There was no profile picture');
+      if (!profilePicture) {
+        throw new ApiError.InternalServerError();
       }
+      await UserService.updateUserById({ profilePicture }, userId);
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
-        'User profile updated successfully'
+        MessageCodeConstants.USER_PROFILE_IMAGE_UPDATED
       ));
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       Chalk.red(error);

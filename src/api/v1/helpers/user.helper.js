@@ -126,7 +126,7 @@ const UserHelper = {
           );
 
           Mailer.sendMail({
-            to: result.data.data.user.email,
+            to: result.data.data.email,
             subject: MessageCodeConstants.USER_CREATED_SUCCESSFULLY,
             html
           });

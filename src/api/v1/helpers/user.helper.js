@@ -17,10 +17,141 @@ const {
   MaritalStatusConstants
 } = require('../../../constants');
 
-const { UserService, EmployeeService } = require('../services');
-const CloudinaryHelper = require('./cloudinary.helper');
+const { UserService, TeamsService } = require('../services');
+const { sequelize } = require('../../../../models');
 
 const UserHelper = {
+
+  /**
+   * Create a new user
+   */
+  createUser: async (req) => {
+    try {
+      const reqBody = req.body;
+      const userToBeCreated = {
+        firstName: reqBody.firstName,
+        middleName: reqBody.middleName,
+        lastName: reqBody.lastName,
+        email: reqBody.email,
+        phoneNumber: `${reqBody.phoneNumber || ''}` || null,
+        whatsappNumber: `${reqBody.whatsappNumber || ''}` || null,
+        dateOfBirth: reqBody.dateOfBirth,
+        address: reqBody.address,
+        pinCode: reqBody.pinCode,
+        sex: reqBody.sex,
+        maritalStatus: reqBody.maritalStatus,
+        nationality: reqBody.nationality,
+        hiredOn: reqBody.hiredOn,
+        deviceToken: reqBody.deviceToken,
+        teamId: reqBody.teamId,
+        appVersion: reqBody.appVersion,
+        password: reqBody.password,
+        designation: reqBody.designation,
+        role: reqBody.role,
+        status: reqBody.status,
+        jobType: reqBody.jobType
+      };
+      const validationResult = Validator.validate(userToBeCreated, {
+        firstName: { presence: { allowEmpty: false } },
+        email: { presence: { allowEmpty: false }, email: true },
+        phoneNumber: {
+          presence: { allowEmpty: false },
+          numericality: { onlyInteger: true },
+          length: { is: ValidationConstant.PHONE_NUMBER_LENGTH }
+        },
+        whatsappNumber: {
+          numericality: { onlyInteger: true },
+          length: { is: ValidationConstant.WHATS_APP_NUMBER_LENGTH }
+        },
+        designation: { presence: { allowEmpty: false } },
+        role: {
+          presence: { allowEmpty: false },
+          inclusion: {
+            within: Object.keys(RolesConstants).map((key) => RolesConstants[key]),
+            message: MessageCodeConstants.IS_NOT_VALID
+          }
+        },
+        teamId: { numericality: { onlyInteger: true } },
+        dateOfBirth: { presence: { allowEmpty: false } },
+        address: { presence: { allowEmpty: false } },
+        pinCode: { presence: { allowEmpty: false } },
+        sex: {
+          presence: { allowEmpty: false },
+          inclusion: {
+            within: Object.keys(SexConstants).map((key) => SexConstants[key]),
+            message: MessageCodeConstants.IS_NOT_VALID
+          }
+        },
+        maritalStatus: {
+          presence: { allowEmpty: false },
+          inclusion: {
+            within: Object.keys(MaritalStatusConstants).map((key) => MaritalStatusConstants[key]),
+            message: MessageCodeConstants.IS_NOT_VALID
+          }
+        },
+        nationality: { presence: { allowEmpty: false } },
+        hiredOn: { presence: { allowEmpty: false } },
+        jobType: { presence: { allowEmpty: false } }
+      });
+      if (validationResult) {
+        throw new ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR, validationResult);
+      }
+      const alreadyUser = await UserService.findUserByEmailOrPhone({
+        email: userToBeCreated.email,
+        phoneNumber: userToBeCreated.phoneNumber
+      });
+
+      if (alreadyUser) {
+        if (alreadyUser.email === userToBeCreated.email) {
+          throw new ApiError.ResourceAlreadyExistError(MessageCodeConstants.EMAIL_ALREADY_EXISTS);
+        }
+        if (alreadyUser.phoneNumber === userToBeCreated.phoneNumber) {
+          throw new ApiError.ResourceAlreadyExistError(MessageCodeConstants.PHONE_ALREADY_EXISTS);
+        }
+      }
+      const userName = `${userToBeCreated.firstName || ''} ${userToBeCreated.lastName || ''}`.trim();
+      const count = await UserService.countUsers();
+      const empIdLength = Number(process.env.EMPLOYEE_ID_LENGTH);
+      const employeeId = `${process.env.EMPLOYEE_ID_PREFIX}${('0'.repeat(empIdLength) + (count + 1)).substr(-empIdLength)}`;
+      userToBeCreated.employeeId = employeeId;
+
+      const password = Crypto.randomBytes(4);
+      userToBeCreated.password = await bcrypt.hash(password, 10);
+      const result = await UserHelper.createUserWithTeamAssociation(userToBeCreated);
+      if (result && result.success) {
+        (async () => {
+          const html = await pug.renderFile(
+            path.join(__dirname, '../../../templates/create-user.pug'),
+            { userName, password }
+          );
+
+          Mailer.sendMail({
+            to: result.data.data.email,
+            subject: MessageCodeConstants.USER_CREATED_SUCCESSFULLY,
+            html
+          });
+        })();
+
+        return {
+          success: true,
+          data: result.data
+        };
+      }
+      return {
+        success: false,
+        data: result.data
+      };
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      return {
+        success: false,
+        error: Response.sendError(
+          message,
+          error,
+          code
+        )
+      };
+    }
+  },
 
   /**
    * Update user
@@ -79,15 +210,6 @@ const UserHelper = {
         }
       }
 
-      const userName = `${userToBeUpdated.firstName || ''} ${userToBeUpdated.lastName || ''}`.trim();
-      if (req.file && req.file.path) {
-        const cloudinaryResponse = await CloudinaryHelper.upload({
-          filePath: req.file.path,
-          tags: [userName]
-        });
-        userToBeUpdated.profilePicture = cloudinaryResponse.secure_url;
-      }
-
       await UserService.updateUserById(userToBeUpdated, userId);
       return {
         success: true,
@@ -106,140 +228,51 @@ const UserHelper = {
   },
 
   /**
-   * Create A User
+   * Create a new user with associated team
    */
-
-  createAUser: async (req, role) => {
+  createUserWithTeamAssociation: async (employeeToBeCreated) => {
+    const transaction = await sequelize.transaction();
     try {
-      const requestBody = req.body;
-      const userToBeCreated = {
-        firstName: requestBody.firstName,
-        middleName: requestBody.middleName,
-        lastName: requestBody.lastName,
-        email: requestBody.email,
-        phoneNumber: `${requestBody.phoneNumber || ''}` || null,
-        whatsappNumber: `${requestBody.whatsappNumber || ''}` || null,
-        dateOfBirth: requestBody.dateOfBirth,
-        address: requestBody.address,
-        pinCode: requestBody.pinCode,
-        sex: requestBody.sex,
-        maritalStatus: requestBody.maritalStatus,
-        nationality: requestBody.nationality,
-        hiredOn: requestBody.hiredOn,
-        deviceToken: requestBody.deviceToken,
-        team: requestBody.team.id,
-        appVersion: requestBody.appVersion,
-        password: requestBody.password,
-        designation: requestBody.designation,
-        role,
-        status: requestBody.status,
-        jobType: requestBody.jobType
-      };
-      const validationResult = Validator.validate(userToBeCreated, {
-        firstName: { presence: { allowEmpty: false } },
-        email: { presence: { allowEmpty: false }, email: true },
-        phoneNumber: {
-          presence: { allowEmpty: false },
-          numericality: { onlyInteger: true },
-          length: { is: ValidationConstant.PHONE_NUMBER_LENGTH }
-        },
-        whatsappNumber: {
-          numericality: { onlyInteger: true },
-          length: { is: ValidationConstant.WHATS_APP_NUMBER_LENGTH }
-        },
-        designation: { presence: { allowEmpty: false } },
-        role: {
-          presence: { allowEmpty: false },
-          inclusion: {
-            within: Object.keys(RolesConstants).map((key) => RolesConstants[key]),
-            message: MessageCodeConstants.IS_NOT_VALID
+      const createdUser = await UserService.createUser(employeeToBeCreated, transaction);
+      if (employeeToBeCreated.teamId) {
+        const foundTeam = await TeamsService.getTeamById(employeeToBeCreated.teamId);
+        await foundTeam.addUser(createdUser, {
+          transaction,
+          through: {
+            isSupervisor: createdUser.role === 'Supervisor',
+            status: foundTeam.status
           }
-        },
-        team: { presence: { allowEmpty: false } },
-        dateOfBirth: { presence: { allowEmpty: false } },
-        address: { presence: { allowEmpty: false } },
-        pinCode: { presence: { allowEmpty: false } },
-        sex: {
-          presence: { allowEmpty: false },
-          inclusion: {
-            within: Object.keys(SexConstants).map((key) => SexConstants[key]),
-            message: MessageCodeConstants.IS_NOT_VALID
-          }
-        },
-        maritalStatus: {
-          presence: { allowEmpty: false },
-          inclusion: {
-            within: Object.keys(MaritalStatusConstants).map((key) => MaritalStatusConstants[key]),
-            message: MessageCodeConstants.IS_NOT_VALID
-          }
-        },
-        nationality: { presence: { allowEmpty: false } },
-        hiredOn: { presence: { allowEmpty: false } },
-        jobType: { presence: { allowEmpty: false } }
-      });
-      if (validationResult) {
-        throw new ApiError.ValidationError(MessageCodeConstants.VALIDATION_ERROR, validationResult);
-      }
-      const alreadyUser = await UserService.findUserByEmailOrPhone({
-        email: userToBeCreated.email,
-        phoneNumber: userToBeCreated.phoneNumber
-      });
-
-      if (alreadyUser) {
-        if (alreadyUser.email === userToBeCreated.email) {
-          throw new ApiError.ResourceAlreadyExistError(MessageCodeConstants.EMAIL_ALREADY_EXISTS);
-        }
-        if (alreadyUser.phoneNumber === userToBeCreated.phoneNumber) {
-          throw new ApiError.ResourceAlreadyExistError(MessageCodeConstants.PHONE_ALREADY_EXISTS);
-        }
-      }
-      const userName = `${userToBeCreated.firstName || ''} ${userToBeCreated.lastName || ''}`.trim();
-      if (req.file && req.file.path) {
-        const cloudinaryResponse = await CloudinaryHelper.upload({
-          filePath: req.file.path,
-          tags: [userName]
         });
-        userToBeCreated.profilePicture = cloudinaryResponse.secure_url;
       }
-      const count = await UserService.countUsers();
-      const empIdLength = Number(process.env.EMPLOYEE_ID_LENGTH);
-      const employeeId = `${process.env.EMPLOYEE_ID_PREFIX}${('0'.repeat(empIdLength) + (count + 1)).substr(-empIdLength)}`;
-      userToBeCreated.employeeId = employeeId;
-
-      const password = Crypto.randomBytes(4);
-      userToBeCreated.password = await bcrypt.hash(password, 10);
-      const result = await EmployeeService.createANewEmployee(userToBeCreated);
-      if (result && result.success) {
-        (async () => {
-          const html = await pug.renderFile(
-            path.join(__dirname, '../../../templates/create-user.pug'),
-            { userName, password }
-          );
-
-          Mailer.sendMail({
-            to: result.data.data.user.email,
-            subject: MessageCodeConstants.USER_CREATED_SUCCESSFULLY,
-            html
-          });
-        })();
-
-        return {
-          success: true,
-          data: result.data
-        };
-      }
+      transaction.commit();
+      const user = {
+        id: createdUser.id,
+        firstName: createdUser.firstName,
+        lastName: createdUser.lastName,
+        email: createdUser.email,
+        phoneNumber: createdUser.phoneNumber,
+        whatsappNumber: createdUser.whatsappNumber,
+        designation: createdUser.designation,
+        role: createdUser.role,
+        status: createdUser.status,
+        employeeId: createdUser.employeeId,
+        profilePicture: createdUser.profilePicture,
+        createdAt: createdUser.createdAt,
+        updatedAt: createdUser.updatedAt
+      };
       return {
-        success: false,
-        data: result.data
+        success: true,
+        data: Response.sendSuccess('User has been created successfully', user),
+        error: null
       };
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      if (transaction) {
+        transaction.rollback();
+      }
       return {
         success: false,
-        error: Response.sendError(
-          message,
-          error,
-          code
-        )
+        data: null,
+        error: Response.sendError(message, error, code)
       };
     }
   }

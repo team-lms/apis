@@ -3,23 +3,6 @@ const { TeamAssociation, Team, sequelize } = require('../../../../models');
 const UserService = require('./user.service');
 
 const TeamAssociationsService = {
-  /**
-   * Associate A Team
-   */
-  associateATeam: async (teamToBeAssociated, transaction = null) => TeamAssociation.create(
-    teamToBeAssociated,
-    { ...(transaction && { transaction }) }
-  ),
-
-  updateAssociatingATeam: async (teamToBeAssociated, id,
-    transaction = null) => TeamAssociation.update(
-    teamToBeAssociated, {
-      where: {
-        id,
-        ...(transaction && { transaction })
-      }
-    }
-  ),
 
   /**
    * find Team of a User

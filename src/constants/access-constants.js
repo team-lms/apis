@@ -1,6 +1,15 @@
 const RolesConstants = require('./roles.constants');
 
 module.exports = Object.freeze({
+
+  USER: Object.freeze({
+    UPDATE_PROFILE_PICTURE: [
+      RolesConstants.ADMIN,
+      RolesConstants.HR,
+      RolesConstants.EMPLOYEE
+    ]
+  }),
+
   TEAM: Object.freeze({
     CREATE: [RolesConstants.ADMIN, RolesConstants.HR],
     GET_ALL: [RolesConstants.ADMIN, RolesConstants.HR],

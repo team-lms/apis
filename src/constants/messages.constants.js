@@ -6,6 +6,7 @@ module.exports = Object.freeze({
   PHONE_ALREADY_EXISTS: 'Phone number already exists',
   IS_NOT_VALID: 'is not valid',
   USER_CREATED_SUCCESSFULLY: 'User created successfully', // TODO: This message will not be used in future
+  USER_PROFILE_IMAGE_UPDATED: 'User profile updated successfully',
   USER_NOT_FOUND: 'User not found',
   PASSWORD_INCORRECT: 'Passwords did not match',
   USER_FETCHED_SUCCESSFULLY: 'User Fetched Successfully', // TODO: This message will not be used in future

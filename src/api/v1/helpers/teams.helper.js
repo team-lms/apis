@@ -2,15 +2,15 @@ const { sequelize } = require('../../../../models');
 const { TeamsService, TeamAssociationService } = require('../services');
 
 module.exports = {
-  assignATeamWithTeamLeaderAssigned: async (teamToBeCreated) => {
+  createTeamWithSupervisorAssigned: async (teamToBeCreated) => {
     const transaction = await sequelize.transaction();
     try {
       const createdTeam = await TeamsService.createTeam(teamToBeCreated, transaction);
       const teamAssociations = {
-        userId: teamToBeCreated.teamLeader.id,
-        isSupervisor: 1,
+        userId: teamToBeCreated.supervisorId,
+        isSupervisor: true,
         teamId: createdTeam.id,
-        status: teamToBeCreated.teamLeader.status
+        status: createdTeam.status
       };
       await TeamAssociationService.associateATeam(teamAssociations, transaction);
       transaction.commit();

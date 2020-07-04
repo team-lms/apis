@@ -10,6 +10,13 @@ class ApiError extends Error {
   }
 }
 
+class InternalServerError extends ApiError {
+  constructor(message = MessageCodeConstants.INTERNAL_SERVER_ERROR, error = {}) {
+    super(message, StatusCodeConstants.INTERNAL_SERVER_ERROR);
+    this.error = error;
+  }
+}
+
 class ResourceAlreadyExistError extends Error {
   constructor(message = MessageCodeConstants.ALREADY_EXIST, error = {}) {
     super(message, StatusCodeConstants.RESOURCE_EXISTS);
@@ -25,6 +32,7 @@ class ValidationError extends ApiError {
 }
 
 module.exports = {
-  ValidationError,
-  ResourceAlreadyExistError
+  InternalServerError,
+  ResourceAlreadyExistError,
+  ValidationError
 };

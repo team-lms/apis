@@ -136,6 +136,7 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Otp, { as: 'otps', foreignKey: 'userId' });
     User.hasMany(models.Leave, { as: 'leaves', foreignKey: 'userId' });
     User.hasOne(models.TeamAssociation, { as: 'teamAssociation', foreignKey: 'userId' });
+    User.belongsToMany(models.Team, { as: 'teams', through: 'TeamAssociation', foreignKey: 'userId' });
   };
 
   return User;

@@ -1,19 +1,17 @@
-const UserService = require('./user.service');
-const JwtService = require('./jwt.service');
-const OtpService = require('./otp.service');
-const TeamsService = require('./team.service');
-const TeamAssociationService = require('./teamAssociations');
-const EmployeeService = require('./employer.service');
-const LeaveService = require('./leaves.service');
 const DesignationService = require('./designation.service');
+const JwtService = require('./jwt.service');
+const LeaveService = require('./leaves.service');
+const OtpService = require('./otp.service');
+const TeamAssociationService = require('./teamAssociations');
+const TeamsService = require('./team.service');
+const UserService = require('./user.service');
 
 module.exports = {
-  UserService,
+  DesignationService,
   JwtService,
-  OtpService,
-  TeamsService,
-  TeamAssociationService,
-  EmployeeService,
   LeaveService,
-  DesignationService
+  OtpService,
+  TeamAssociationService,
+  TeamsService,
+  UserService
 };

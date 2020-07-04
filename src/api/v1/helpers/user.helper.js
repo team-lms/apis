@@ -162,16 +162,27 @@ const UserHelper = {
       const { id: userId } = req.params;
       const userToBeUpdated = {
         ...(reqBody.firstName && { firstName: reqBody.firstName }),
+        ...(reqBody.middleName && { middleName: reqBody.middleName }),
         ...(reqBody.lastName && { lastName: reqBody.lastName }),
         ...(reqBody.email && { email: reqBody.email }),
         ...(reqBody.phoneNumber && { phoneNumber: reqBody.phoneNumber }),
         ...(reqBody.whatsappNumber && { whatsappNumber: reqBody.whatsappNumber }),
+        ...(reqBody.dateOfBirth && { dateOfBirth: reqBody.dateOfBirth }),
+        ...(reqBody.address && { address: reqBody.address }),
+        ...(reqBody.pinCode && { pinCode: reqBody.pinCode }),
+        ...(reqBody.sex && { sex: reqBody.sex }),
+        ...(reqBody.maritalStatus && { maritalStatus: reqBody.maritalStatus }),
+        ...(reqBody.nationality && { nationality: reqBody.nationality }),
+        ...(reqBody.hiredOn && { hiredOn: reqBody.hiredOn }),
+        ...(reqBody.teamId && { teamId: reqBody.teamId }),
         ...(reqBody.designation && { designation: reqBody.designation }),
         ...(reqBody.role && { role: reqBody.role }),
-        ...(reqBody.status && { status: reqBody.status })
+        ...(reqBody.status && { status: reqBody.status }),
+        ...(reqBody.jobType && { status: reqBody.jobType })
       };
 
       const validationResult = Validator.validate(userToBeUpdated, {
+        firstName: { presence: { allowEmpty: false } },
         email: { presence: { allowEmpty: false }, email: true },
         phoneNumber: {
           presence: { allowEmpty: false },
@@ -182,13 +193,35 @@ const UserHelper = {
           numericality: { onlyInteger: true },
           length: { is: ValidationConstant.WHATS_APP_NUMBER_LENGTH }
         },
+        designation: { presence: { allowEmpty: false } },
         role: {
           presence: { allowEmpty: false },
           inclusion: {
             within: Object.keys(RolesConstants).map((key) => RolesConstants[key]),
             message: MessageCodeConstants.IS_NOT_VALID
           }
-        }
+        },
+        teamId: { numericality: { onlyInteger: true } },
+        dateOfBirth: { presence: { allowEmpty: false } },
+        address: { presence: { allowEmpty: false } },
+        pinCode: { presence: { allowEmpty: false } },
+        sex: {
+          presence: { allowEmpty: false },
+          inclusion: {
+            within: Object.keys(SexConstants).map((key) => SexConstants[key]),
+            message: MessageCodeConstants.IS_NOT_VALID
+          }
+        },
+        maritalStatus: {
+          presence: { allowEmpty: false },
+          inclusion: {
+            within: Object.keys(MaritalStatusConstants).map((key) => MaritalStatusConstants[key]),
+            message: MessageCodeConstants.IS_NOT_VALID
+          }
+        },
+        nationality: { presence: { allowEmpty: false } },
+        hiredOn: { presence: { allowEmpty: false } },
+        jobType: { presence: { allowEmpty: false } }
       });
 
       if (validationResult) {

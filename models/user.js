@@ -114,11 +114,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     jobType: {
+      allowNull: false,
       type: DataTypes.ENUM(
         JobTypeConstants.PART_TIME,
         JobTypeConstants.FULL_TIME
       ),
-      default: JobTypeConstants.FULL_TIME 
+      default: JobTypeConstants.FULL_TIME
     },
     profilePicture: {
       type: DataTypes.STRING(100)

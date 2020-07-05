@@ -3,7 +3,8 @@ const {
   RolesConstants,
   StatusConstants,
   SexConstants,
-  MaritalStatusConstants
+  MaritalStatusConstants,
+  JobTypeConstants
 } = require('../src/constants');
 
 module.exports = (sequelize, DataTypes) => {
@@ -111,6 +112,14 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       allowNull: false,
       type: DataTypes.STRING
+    },
+    jobType: {
+      allowNull: false,
+      type: DataTypes.ENUM(
+        JobTypeConstants.PART_TIME,
+        JobTypeConstants.FULL_TIME
+      ),
+      default: JobTypeConstants.FULL_TIME
     },
     profilePicture: {
       type: DataTypes.STRING(100)

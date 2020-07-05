@@ -2,22 +2,18 @@ const { StatusConstants } = require('../src/constants');
 
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Designations', {
-    id: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: Sequelize.INTEGER
-    },
     name: {
       allowNull: false,
-      unique: true,
+      primaryKey: true,
       type: Sequelize.STRING(50)
     },
     status: {
       type: Sequelize.ENUM(
         StatusConstants.ACTIVE,
         StatusConstants.INACTIVE
-      )
+      ),
+      allowNull: false,
+      defaultValue: StatusConstants.ACTIVE
     },
     createdAt: {
       allowNull: false,
@@ -25,9 +21,6 @@ module.exports = {
     },
     updatedAt: {
       allowNull: false,
-      type: Sequelize.DATE
-    },
-    deletedAt: {
       type: Sequelize.DATE
     }
   }),

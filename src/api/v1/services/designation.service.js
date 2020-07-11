@@ -43,6 +43,7 @@ const DesignationService = {
     return Designation.findAndCountAll({
       where: {
         [Op.and]: [
+          { name: { [Op.ne]: 'Administrator' } },
           { status: StatusConstants.ACTIVE },
           searchCriteria
         ]

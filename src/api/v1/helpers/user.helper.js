@@ -14,7 +14,8 @@ const {
   StatusCodeConstants,
   ValidationConstant,
   SexConstants,
-  MaritalStatusConstants
+  MaritalStatusConstants,
+  JobTypeConstants
 } = require('../../../constants');
 
 const { UserService, TeamsService } = require('../services');
@@ -178,7 +179,7 @@ const UserHelper = {
         ...(reqBody.designation && { designation: reqBody.designation }),
         ...(reqBody.role && { role: reqBody.role }),
         ...(reqBody.status && { status: reqBody.status }),
-        ...(reqBody.jobType && { status: reqBody.jobType })
+        ...(reqBody.jobType && { jobType: reqBody.jobType })
       };
 
       const validationResult = Validator.validate(userToBeUpdated, {
@@ -221,7 +222,13 @@ const UserHelper = {
         },
         nationality: { presence: { allowEmpty: false } },
         hiredOn: { presence: { allowEmpty: false } },
-        jobType: { presence: { allowEmpty: false } }
+        jobType: {
+          presence: { allowEmpty: false },
+          inclusion: {
+            within: Object.keys(JobTypeConstants).map((key) => JobTypeConstants[key]),
+            message: MessageCodeConstants.IS_NOT_VALID
+          }
+        }
       });
 
       if (validationResult) {

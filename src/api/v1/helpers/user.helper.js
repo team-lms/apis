@@ -250,10 +250,16 @@ const UserHelper = {
         }
       }
 
-      await UserService.updateUserById(userToBeUpdated, userId);
+      const result = await UserHelper.updateUserWithTeamAssociation(userToBeUpdated, userId);
+      if (result && result.success) {
+        return {
+          success: true,
+          data: result
+        };
+      }
       return {
-        success: true,
-        error: null
+        success: false,
+        data: result.error
       };
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       return {
@@ -288,6 +294,7 @@ const UserHelper = {
       const user = {
         id: createdUser.id,
         firstName: createdUser.firstName,
+        middleName: createdUser.middleName,
         lastName: createdUser.lastName,
         email: createdUser.email,
         phoneNumber: createdUser.phoneNumber,
@@ -304,6 +311,56 @@ const UserHelper = {
         success: true,
         data: Response.sendSuccess('User has been created successfully', user),
         error: null
+      };
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      if (transaction) {
+        transaction.rollback();
+      }
+      return {
+        success: false,
+        data: null,
+        error: Response.sendError(message, error, code)
+      };
+    }
+  },
+  /**
+   * Update User With Team Association
+   */
+  updateUserWithTeamAssociation: async (employeeToBeUpdated, id) => {
+    const transaction = await sequelize.transaction();
+    // eslint-disable-next-line no-param-reassign
+    employeeToBeUpdated.id = id;
+    try {
+      await UserService.updateUserById(employeeToBeUpdated, id, transaction);
+      if (employeeToBeUpdated.teamId) {
+        const foundTeam = await TeamsService.getTeamById(employeeToBeUpdated.teamId);
+        await foundTeam.setUsers(employeeToBeUpdated, {
+          transaction,
+          through: {
+            isSupervisor: employeeToBeUpdated.role === 'Supervisor',
+            status: foundTeam.status
+          }
+        });
+      }
+      transaction.commit();
+      // const user = {
+      //   id: updatedUser.id,
+      //   firstName: updatedUser.firstName,
+      //   middleName: updatedUser.middleName,
+      //   lastName: updatedUser.lastName,
+      //   phoneNumber: updatedUser.phoneNumber,
+      //   whatsappNumber: updatedUser.whatsappNumber,
+      //   designation: updatedUser.designation,
+      //   role: updatedUser.role,
+      //   status: updatedUser.status,
+      //   employeeId: updatedUser.employeeId,
+      //   profilePicture: updatedUser.profilePicture,
+      //   createdAt: updatedUser.createdAt,
+      //   updatedAt: updatedUser.updatedAt
+      // };
+      return {
+        success: true,
+        data: Response.sendSuccess('User has been updated successfully')
       };
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       if (transaction) {

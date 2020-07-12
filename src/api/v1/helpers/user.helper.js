@@ -14,7 +14,8 @@ const {
   StatusCodeConstants,
   ValidationConstant,
   SexConstants,
-  MaritalStatusConstants
+  MaritalStatusConstants,
+  JobTypeConstants
 } = require('../../../constants');
 
 const { UserService, TeamsService } = require('../services');
@@ -178,7 +179,7 @@ const UserHelper = {
         ...(reqBody.designation && { designation: reqBody.designation }),
         ...(reqBody.role && { role: reqBody.role }),
         ...(reqBody.status && { status: reqBody.status }),
-        ...(reqBody.jobType && { status: reqBody.jobType })
+        ...(reqBody.jobType && { jobType: reqBody.jobType })
       };
 
       const validationResult = Validator.validate(userToBeUpdated, {
@@ -221,7 +222,13 @@ const UserHelper = {
         },
         nationality: { presence: { allowEmpty: false } },
         hiredOn: { presence: { allowEmpty: false } },
-        jobType: { presence: { allowEmpty: false } }
+        jobType: {
+          presence: { allowEmpty: false },
+          inclusion: {
+            within: Object.keys(JobTypeConstants).map((key) => JobTypeConstants[key]),
+            message: MessageCodeConstants.IS_NOT_VALID
+          }
+        }
       });
 
       if (validationResult) {
@@ -243,10 +250,16 @@ const UserHelper = {
         }
       }
 
-      await UserService.updateUserById(userToBeUpdated, userId);
+      const result = await UserHelper.updateUserWithTeamAssociation(userToBeUpdated, userId);
+      if (result && result.success) {
+        return {
+          success: true,
+          data: result.data
+        };
+      }
       return {
-        success: true,
-        error: null
+        success: false,
+        error: result.error
       };
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       return {
@@ -281,6 +294,7 @@ const UserHelper = {
       const user = {
         id: createdUser.id,
         firstName: createdUser.firstName,
+        middleName: createdUser.middleName,
         lastName: createdUser.lastName,
         email: createdUser.email,
         phoneNumber: createdUser.phoneNumber,
@@ -296,6 +310,42 @@ const UserHelper = {
       return {
         success: true,
         data: Response.sendSuccess('User has been created successfully', user),
+        error: null
+      };
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      if (transaction) {
+        transaction.rollback();
+      }
+      return {
+        success: false,
+        data: null,
+        error: Response.sendError(message, error, code)
+      };
+    }
+  },
+  /**
+   * Update User With Team Association
+   */
+  updateUserWithTeamAssociation: async (employeeToBeUpdated, id) => {
+    const transaction = await sequelize.transaction();
+    try {
+      await UserService.updateUserById(employeeToBeUpdated, id, transaction);
+      if (employeeToBeUpdated.teamId) {
+        const foundTeam = await TeamsService.getTeamById(employeeToBeUpdated.teamId);
+        if (!await foundTeam.hasUser(Number(id))) {
+          await foundTeam.setUsers(id, {
+            transaction,
+            through: {
+              isSupervisor: employeeToBeUpdated.role === 'Supervisor',
+              status: foundTeam.status
+            }
+          });
+        }
+      }
+      transaction.commit();
+      return {
+        success: true,
+        data: Response.sendSuccess(),
         error: null
       };
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {

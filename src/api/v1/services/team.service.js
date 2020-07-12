@@ -6,7 +6,7 @@ module.exports = {
   /**
    * Get team by team id
    */
-  getTeamById: async (teamId) => Team.findOne({ id: teamId }),
+  getTeamById: async (teamId) => Team.findOne({ where: { id: teamId } }),
 
   /**
    * Get the teams

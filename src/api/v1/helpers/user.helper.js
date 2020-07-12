@@ -254,12 +254,12 @@ const UserHelper = {
       if (result && result.success) {
         return {
           success: true,
-          data: result
+          data: result.data
         };
       }
       return {
         success: false,
-        data: result.error
+        error: result.error
       };
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       return {
@@ -328,39 +328,25 @@ const UserHelper = {
    */
   updateUserWithTeamAssociation: async (employeeToBeUpdated, id) => {
     const transaction = await sequelize.transaction();
-    // eslint-disable-next-line no-param-reassign
-    employeeToBeUpdated.id = id;
     try {
       await UserService.updateUserById(employeeToBeUpdated, id, transaction);
       if (employeeToBeUpdated.teamId) {
         const foundTeam = await TeamsService.getTeamById(employeeToBeUpdated.teamId);
-        await foundTeam.setUsers(employeeToBeUpdated, {
-          transaction,
-          through: {
-            isSupervisor: employeeToBeUpdated.role === 'Supervisor',
-            status: foundTeam.status
-          }
-        });
+        if (!await foundTeam.hasUser(Number(id))) {
+          await foundTeam.setUsers(id, {
+            transaction,
+            through: {
+              isSupervisor: employeeToBeUpdated.role === 'Supervisor',
+              status: foundTeam.status
+            }
+          });
+        }
       }
       transaction.commit();
-      // const user = {
-      //   id: updatedUser.id,
-      //   firstName: updatedUser.firstName,
-      //   middleName: updatedUser.middleName,
-      //   lastName: updatedUser.lastName,
-      //   phoneNumber: updatedUser.phoneNumber,
-      //   whatsappNumber: updatedUser.whatsappNumber,
-      //   designation: updatedUser.designation,
-      //   role: updatedUser.role,
-      //   status: updatedUser.status,
-      //   employeeId: updatedUser.employeeId,
-      //   profilePicture: updatedUser.profilePicture,
-      //   createdAt: updatedUser.createdAt,
-      //   updatedAt: updatedUser.updatedAt
-      // };
       return {
         success: true,
-        data: Response.sendSuccess('User has been updated successfully')
+        data: Response.sendSuccess(),
+        error: null
       };
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       if (transaction) {

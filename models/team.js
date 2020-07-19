@@ -15,8 +15,9 @@ module.exports = (sequelize, DataTypes) => {
       )
     }
   }, { paranoid: true });
+
   Team.associate = (models) => {
-    Team.belongsToMany(models.User, { as: 'users', through: 'TeamAssociation', foreignKey: 'teamId' });
+    Team.hasMany(models.User, { as: 'users', foreignKey: 'teamId', foreignKeyConstraint: true });
   };
 
   return Team;

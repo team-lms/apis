@@ -17,5 +17,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
 
+  Designation.associate = (models) => {
+    Designation.hasMany(models.User, { as: 'users', foreignKey: 'Designation', foreignKeyConstraint: true });
+  };
+
   return Designation;
 };

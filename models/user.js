@@ -142,10 +142,10 @@ module.exports = (sequelize, DataTypes) => {
   }, { paranoid: true });
 
   User.associate = (models) => {
-    User.hasMany(models.Otp, { as: 'otps', foreignKey: 'userId' });
-    User.hasMany(models.Leave, { as: 'leaves', foreignKey: 'userId' });
-    User.hasOne(models.TeamAssociation, { as: 'teamAssociation', foreignKey: 'userId' });
-    User.belongsToMany(models.Team, { as: 'teams', through: 'TeamAssociation', foreignKey: 'userId' });
+    User.hasMany(models.Otp, { as: 'otps', foreignKey: 'userId', foreignKeyConstraint: true });
+    User.hasMany(models.Leave, { as: 'leaves', foreignKey: 'userId', foreignKeyConstraint: true });
+    User.belongsTo(models.Team, { as: 'team', foreignKey: 'teamId', foreignKeyConstraint: true });
+    User.belongsTo(models.Designation, { as: 'designation', foreignKey: 'designation', foreignKeyConstraint: true });
   };
 
   return User;

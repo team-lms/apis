@@ -109,7 +109,13 @@ const UserHelper = {
           throw new ApiError.ResourceAlreadyExistError(MessageCodeConstants.PHONE_ALREADY_EXISTS);
         }
       }
-      const userName = `${userToBeCreated.firstName || ''} ${userToBeCreated.lastName || ''}`.trim();
+      if (userToBeCreated.teamId) {
+        const foundTeam = await TeamsService.getTeamById(userToBeCreated.teamId);
+        if (!foundTeam) {
+          throw new ApiError.ValidationError((MessageCodeConstants.VALIDATION_ERROR, 'Team not found'));
+        }
+      }
+      const userName = `${userToBeCreated.firstName || ''} ${userToBeCreated.middleName || ''} ${userToBeCreated.lastName || ''}`.trim();
       const count = await UserService.countUsers();
       const empIdLength = Number(process.env.EMPLOYEE_ID_LENGTH);
       const employeeId = `${process.env.EMPLOYEE_ID_PREFIX}${('0'.repeat(empIdLength) + (count + 1)).substr(-empIdLength)}`;
@@ -117,29 +123,39 @@ const UserHelper = {
 
       const password = Crypto.randomBytes(4);
       userToBeCreated.password = await bcrypt.hash(password, 10);
-      const result = await UserHelper.createUserWithTeamAssociation(userToBeCreated);
-      if (result && result.success) {
-        (async () => {
-          const html = await pug.renderFile(
-            path.join(__dirname, '../../../templates/create-user.pug'),
-            { userName, password }
-          );
 
-          Mailer.sendMail({
-            to: result.data.data.email,
-            subject: MessageCodeConstants.USER_CREATED_SUCCESSFULLY,
-            html
-          });
-        })();
+      const createdUser = await UserService.createUser(userToBeCreated);
+      const user = {
+        id: createdUser.id,
+        firstName: createdUser.firstName,
+        lastName: createdUser.lastName,
+        email: createdUser.email,
+        phoneNumber: createdUser.phoneNumber,
+        whatsappNumber: createdUser.whatsappNumber,
+        designation: createdUser.designation,
+        role: createdUser.role,
+        status: createdUser.status,
+        employeeId: createdUser.employeeId,
+        profilePicture: createdUser.profilePicture,
+        createdAt: createdUser.createdAt,
+        updatedAt: createdUser.updatedAt
+      };
+      (async () => {
+        const html = await pug.renderFile(
+          path.join(__dirname, '../../../templates/create-user.pug'),
+          { userName, password }
+        );
 
-        return {
-          success: true,
-          data: result.data
-        };
-      }
+        Mailer.sendMail({
+          to: createdUser.email,
+          subject: MessageCodeConstants.USER_CREATED_SUCCESSFULLY,
+          html
+        });
+      })();
+
       return {
-        success: false,
-        data: result.data
+        success: true,
+        data: Response.sendSuccess('User has been created successfully', user)
       };
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       return {
@@ -267,16 +283,6 @@ const UserHelper = {
     const transaction = await sequelize.transaction();
     try {
       const createdUser = await UserService.createUser(employeeToBeCreated, transaction);
-      if (employeeToBeCreated.teamId) {
-        const foundTeam = await TeamsService.getTeamById(employeeToBeCreated.teamId);
-        await foundTeam.addUser(createdUser, {
-          transaction,
-          through: {
-            isSupervisor: createdUser.role === 'Supervisor',
-            status: foundTeam.status
-          }
-        });
-      }
       transaction.commit();
       const user = {
         id: createdUser.id,

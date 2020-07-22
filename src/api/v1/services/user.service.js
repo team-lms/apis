@@ -3,8 +3,7 @@ const bcrypt = require('bcryptjs');
 const {
   User,
   sequelize,
-  Team,
-  TeamAssociation
+  Team
 } = require('../../../../models');
 const OtpService = require('./otp.service');
 const { StatusConstants, RolesConstants } = require('../../../constants');
@@ -130,22 +129,13 @@ const UserService = {
       offset,
       limit,
       include: [{
-        model: TeamAssociation,
-        as: 'teamAssociation',
-        attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt', 'UserId'] },
+        model: Team,
+        as: 'team',
+        attributes: { exclude: ['updatedAt', 'deletedAt'] },
         include: [{
-          model: Team,
-          as: 'team',
-          attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
-          required: false,
-          include: [{
-            model: User,
-            as: 'users',
-            through: { attributes: [] },
-            where: { role: RolesConstants.SUPERVISOR },
-            attributes: ['id', 'firstName', 'middleName', 'lastName', 'email', 'phoneNumber', 'role', 'designation'],
-            required: false
-          }]
+          model: User,
+          as: 'users',
+          where: { role: RolesConstants.SUPERVISOR }
         }]
       }]
     });

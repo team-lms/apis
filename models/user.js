@@ -138,6 +138,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: DefaultValuesConstants.USER_UNAUTHORIZED_LEAVES
+    },
+    teamId: {
+      type: DataTypes.INTEGER
     }
   }, { paranoid: true });
 
@@ -145,7 +148,7 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Otp, { as: 'otps', foreignKey: 'userId', foreignKeyConstraint: true });
     User.hasMany(models.Leave, { as: 'leaves', foreignKey: 'userId', foreignKeyConstraint: true });
     User.belongsTo(models.Team, { as: 'team', foreignKey: 'teamId', foreignKeyConstraint: true });
-    User.belongsTo(models.Designation, { as: 'designation', foreignKey: 'designation', foreignKeyConstraint: true });
+    User.belongsTo(models.Designation, { as: 'Designation', foreignKey: 'designation', foreignKeyConstraint: true });
   };
 
   return User;

@@ -6,7 +6,7 @@ const {
   Team
 } = require('../../../../models');
 const OtpService = require('./otp.service');
-const { StatusConstants } = require('../../../constants');
+const { StatusConstants, RolesConstants } = require('../../../constants');
 
 const UserService = {
 
@@ -138,7 +138,8 @@ const UserService = {
           ...(additionalFilters && { where: { role: additionalFilters } }),
           required: false
         }]
-      }]
+      }],
+      distinct: true
     });
   },
 
@@ -169,6 +170,21 @@ const UserService = {
 
   getAllUsersOfARole: async (role) => User.findAll({
     where: { role }
+  }),
+  /**
+* Find Supervisor of a Team
+*/
+
+  findSupervisorOfATeam: async (teamId, transaction = null) => User.findOne({
+    where: {
+      [Op.and]: [
+        { teamId },
+        { role: RolesConstants.SUPERVISOR }
+      ]
+    },
+    ...(transaction && { transaction }),
+    paranoid: false,
+    attributes: { exclude: ['deletedAt'] }
   })
 
 };

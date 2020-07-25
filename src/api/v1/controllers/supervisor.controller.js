@@ -2,14 +2,9 @@ const {
   StatusCodeConstants,
   QueryConstants,
   RolesConstants,
-  MessageCodeConstants,
-  ValidationConstant
+  MessageCodeConstants
 } = require('../../../constants');
-const {
-  Response,
-  Validator,
-  ApiError
-} = require('../../../utils');
+const { Response } = require('../../../utils');
 const { UserService } = require('../services');
 const { UserHelper } = require('../helpers');
 
@@ -50,50 +45,15 @@ module.exports = {
  * */
   updateSupervisorById: async (req, res) => {
     try {
-      const reqBody = req.body;
-      const { id: userId } = req.params;
-      const supervisorToBeUpdated = {
-        ...(reqBody.firstName && { firstName: reqBody.firstName }),
-        ...(reqBody.lastName && { lastName: reqBody.lastName }),
-        ...(reqBody.email && { email: reqBody.email }),
-        ...(reqBody.phoneNumber && { phoneNumber: reqBody.phoneNumber }),
-        ...(reqBody.whatsappNumber && { whatsappNumber: reqBody.whatsappNumber }),
-        ...(reqBody.designation && { designation: reqBody.designation }),
-        ...(reqBody.role && { role: reqBody.role }),
-        ...(reqBody.status && { status: reqBody.status })
-      };
-      const validationResult = Validator.validate(supervisorToBeUpdated, {
-        email: { presence: { allowEmpty: false }, email: true },
-        phoneNumber: {
-          presence: { allowEmpty: false },
-          numericality: { onlyInteger: true },
-          length: { is: ValidationConstant.PHONE_NUMBER_LENGTH }
-        },
-        whatsappNumber: {
-          numericality: { onlyInteger: true },
-          length: { is: ValidationConstant.PHONE_NUMBER_LENGTH }
-        },
-        designation: { presence: { allowEmpty: false } },
-        role: { presence: { allowEmpty: false } }
-      });
-      if (validationResult) {
-        throw new ApiError.ValidationError(MessageCodeConstants.ValidationError, validationResult);
+      const result = await UserHelper.updateUser(req);
+      if (result && result.success) {
+        return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+          MessageCodeConstants.SUPERVISOR.UPDATED,
+          {},
+          StatusCodeConstants.SUCCESS
+        ));
       }
-      const foundUser = await UserService.findUserByEmailOrPhone(supervisorToBeUpdated, userId);
-      if (foundUser) {
-        if (foundUser.email === supervisorToBeUpdated.email) {
-          throw new ApiError.ResourceAlreadyExistError(MessageCodeConstants.EMAIL_ALREADY_EXISTS);
-        }
-        if (foundUser.phoneNumber === supervisorToBeUpdated.phoneNumber) {
-          throw new ApiError.ResourceAlreadyExistError(MessageCodeConstants.PHONE_ALREADY_EXISTS);
-        }
-      }
-      await UserService.updateUserById(supervisorToBeUpdated, userId);
-      return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
-        MessageCodeConstants.SUPERVISOR.UPDATED,
-        supervisorToBeUpdated,
-        StatusCodeConstants.SUCCESS
-      ));
+      return res.status(result.error.responseCode).json(result.error);
     } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
       return res.status(code).json(Response.sendError(
         message,

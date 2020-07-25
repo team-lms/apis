@@ -18,7 +18,6 @@ const {
 } = require('../../../constants');
 
 const { UserService, TeamsService } = require('../services');
-const { sequelize } = require('../../../../models');
 
 const UserHelper = {
 
@@ -194,7 +193,7 @@ const UserHelper = {
         ...(reqBody.designation && { designation: reqBody.designation }),
         ...(reqBody.role && { role: reqBody.role }),
         ...(reqBody.status && { status: reqBody.status }),
-        ...(reqBody.jobType && { status: reqBody.jobType })
+        ...(reqBody.jobType && { jobType: reqBody.jobType })
       };
 
       const validationResult = Validator.validate(userToBeUpdated, {
@@ -274,46 +273,7 @@ const UserHelper = {
         )
       };
     }
-  },
-
-  /**
-   * Create a new user with associated team
-   */
-  createUserWithTeamAssociation: async (employeeToBeCreated) => {
-    const transaction = await sequelize.transaction();
-    try {
-      const createdUser = await UserService.createUser(employeeToBeCreated, transaction);
-      transaction.commit();
-      const user = {
-        id: createdUser.id,
-        firstName: createdUser.firstName,
-        lastName: createdUser.lastName,
-        email: createdUser.email,
-        phoneNumber: createdUser.phoneNumber,
-        whatsappNumber: createdUser.whatsappNumber,
-        designation: createdUser.designation,
-        role: createdUser.role,
-        status: createdUser.status,
-        employeeId: createdUser.employeeId,
-        profilePicture: createdUser.profilePicture,
-        createdAt: createdUser.createdAt,
-        updatedAt: createdUser.updatedAt
-      };
-      return {
-        success: true,
-        data: Response.sendSuccess('User has been created successfully', user),
-        error: null
-      };
-    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
-      if (transaction) {
-        transaction.rollback();
-      }
-      return {
-        success: false,
-        data: null,
-        error: Response.sendError(message, error, code)
-      };
-    }
   }
+
 };
 module.exports = UserHelper;

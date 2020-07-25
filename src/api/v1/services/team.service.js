@@ -27,7 +27,8 @@ module.exports = {
       model: User,
       as: 'users',
       attributes: ['id', 'firstName', 'middleName', 'lastName', 'email', 'phoneNumber', 'role']
-    }]
+    }],
+    distinct: true
   }),
 
   /**

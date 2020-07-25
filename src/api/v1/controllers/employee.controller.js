@@ -53,7 +53,11 @@ module.exports = {
         sortBy: queryFilters.sortBy || QueryConstants.SORT_BY
       };
 
-      const employees = await UserService.getAllUsers({ role: RolesConstants.EMPLOYEE }, filters);
+      const employees = await UserService.getAllUsers(
+        { role: RolesConstants.EMPLOYEE },
+        filters,
+        RolesConstants.SUPERVISOR
+      );
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
         MessageCodeConstants.EMPLOYEE.FETCHED,
         employees,

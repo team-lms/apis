@@ -50,7 +50,7 @@ module.exports = {
       const teamToBeCreated = {
         teamName: reqBody.teamName,
         status: reqBody.status,
-        supervisorId: reqBody.supervisorId
+        supervisorId: reqBody.supervisor
       };
       const validationResult = Validator.validate(teamToBeCreated, {
         teamName: { presence: { allowEmpty: false } }

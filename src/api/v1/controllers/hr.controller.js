@@ -24,7 +24,11 @@ module.exports = {
         sortType: queryFilters.sortType || QueryConstants.SORT_TYPE[0],
         sortBy: queryFilters.sortBy || QueryConstants.SORT_BY
       };
-      const humanResource = await UserService.getAllUsers({ role: RolesConstants.HR }, filters);
+      const humanResource = await UserService.getAllUsers(
+        { role: RolesConstants.HR },
+        filters,
+        RolesConstants.SUPERVISOR
+      );
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
         MessageCodeConstants.HUMAN_RESOURCE.FETCHED,
         humanResource,

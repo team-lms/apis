@@ -43,7 +43,7 @@ const UserHelper = {
         nationality: reqBody.nationality,
         hiredOn: reqBody.hiredOn,
         deviceToken: reqBody.deviceToken,
-        teamId: reqBody.teamId,
+        teamId: reqBody.teamId || null,
         appVersion: reqBody.appVersion,
         password: reqBody.password,
         designation: reqBody.designation,

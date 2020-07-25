@@ -6,7 +6,7 @@ const {
   Team
 } = require('../../../../models');
 const OtpService = require('./otp.service');
-const { StatusConstants, RolesConstants } = require('../../../constants');
+const { StatusConstants } = require('../../../constants');
 
 const UserService = {
 
@@ -96,7 +96,7 @@ const UserService = {
     sortType,
     searchBy,
     searchTerm
-  }) => {
+  }, additionalFilters = null) => {
     let searchCriteria = {};
     if (searchBy.toLowerCase() === 'name' && searchTerm) {
       searchCriteria = Sequelize.where(
@@ -135,7 +135,8 @@ const UserService = {
         include: [{
           model: User,
           as: 'users',
-          where: { role: RolesConstants.SUPERVISOR }
+          ...(additionalFilters && { where: { role: additionalFilters } }),
+          required: false
         }]
       }]
     });

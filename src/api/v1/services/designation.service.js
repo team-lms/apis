@@ -44,6 +44,7 @@ const DesignationService = {
       where: {
         [Op.and]: [
           { status: StatusConstants.ACTIVE },
+          { name: { [Op.ne]: 'Administrator' } },
           searchCriteria
         ]
       },

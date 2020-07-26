@@ -8,7 +8,7 @@ const {
   Validator,
   ApiError
 } = require('../../../utils');
-const { TeamsService } = require('../services');
+const { TeamsService, UserService } = require('../services');
 const { TeamsHelper } = require('../helpers');
 
 module.exports = {
@@ -50,7 +50,7 @@ module.exports = {
       const teamToBeCreated = {
         teamName: reqBody.teamName,
         status: reqBody.status,
-        supervisorId: reqBody.supervisorId
+        supervisorId: reqBody.supervisor
       };
       const validationResult = Validator.validate(teamToBeCreated, {
         teamName: { presence: { allowEmpty: false } }
@@ -94,7 +94,7 @@ module.exports = {
       const teamToBeUpdated = {
         teamName: reqBody.teamName,
         status: reqBody.status,
-        teamLeader: reqBody.teamLeader
+        supervisor: reqBody.supervisor
       };
       const validationResult = Validator.validate(teamToBeUpdated, {
         teamName: { presence: { allowEmpty: false } }
@@ -110,7 +110,23 @@ module.exports = {
       if (foundTeam) {
         throw new ApiError.ValidationError(MessageCodeConstants.TEAM.ALREADY_EXISTS);
       }
-      await TeamsService.updateATeam(teamToBeUpdated, teamId);
+      const foundSupervisor = await UserService.findUserById(
+        { userId: teamToBeUpdated.supervisor }
+      );
+      if (!foundSupervisor) {
+        throw new ApiError.ValidationError(MessageCodeConstants.USER_NOT_FOUND);
+      }
+
+      const result = await TeamsHelper.updateATeam(teamId, foundSupervisor);
+      if (result && result.success) {
+        return res.status(result.data.responseCode).json(
+          Response.sendSuccess(
+            MessageCodeConstants.TEAM.UPDATED,
+            {},
+            result.data.responseCode
+          )
+        );
+      }
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
         MessageCodeConstants.TEAM.UPDATED,
         {},

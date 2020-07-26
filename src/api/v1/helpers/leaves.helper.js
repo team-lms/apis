@@ -12,7 +12,7 @@ const {
   Validator,
   ApiError
 } = require('../../../utils');
-const { TeamAssociationService, UserService } = require('../services');
+const { UserService } = require('../services');
 
 module.exports = {
   leaveApply: async (req) => {
@@ -52,18 +52,7 @@ module.exports = {
       hr.map((singleHr) => usersToBeMailed.push(singleHr.email));
 
       if (req.userInfo.role === RolesConstants.EMPLOYEE) {
-        /**
-         * Find the Team of the Employee
-         */
-        const teamWithUser = await TeamAssociationService
-          .findTeamOfAUser({ userId: req.userInfo.id });
-
-        /**
-         *Find the Supervisor of the Team
-         */
-        const supervisor = await TeamAssociationService
-          .findSupervisorOfATeam({ teamId: teamWithUser.teamId });
-        usersToBeMailed.push(supervisor.data.email);
+        // TODO: Keep the supervisor as well in the receiver's list
       }
 
       /**

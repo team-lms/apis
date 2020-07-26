@@ -3,8 +3,7 @@ const bcrypt = require('bcryptjs');
 const {
   User,
   sequelize,
-  Team,
-  TeamAssociation
+  Team
 } = require('../../../../models');
 const OtpService = require('./otp.service');
 const { StatusConstants, RolesConstants } = require('../../../constants');
@@ -97,7 +96,7 @@ const UserService = {
     sortType,
     searchBy,
     searchTerm
-  }) => {
+  }, additionalFilters = null) => {
     let searchCriteria = {};
     if (searchBy.toLowerCase() === 'name' && searchTerm) {
       searchCriteria = Sequelize.where(
@@ -130,24 +129,17 @@ const UserService = {
       offset,
       limit,
       include: [{
-        model: TeamAssociation,
-        as: 'teamAssociation',
-        attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt', 'UserId'] },
+        model: Team,
+        as: 'team',
+        attributes: { exclude: ['updatedAt', 'deletedAt'] },
         include: [{
-          model: Team,
-          as: 'team',
-          attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
-          required: false,
-          include: [{
-            model: User,
-            as: 'users',
-            through: { attributes: [] },
-            where: { role: RolesConstants.SUPERVISOR },
-            attributes: ['id', 'firstName', 'middleName', 'lastName', 'email', 'phoneNumber', 'role', 'designation'],
-            required: false
-          }]
+          model: User,
+          as: 'users',
+          ...(additionalFilters && { where: { role: additionalFilters } }),
+          required: false
         }]
-      }]
+      }],
+      distinct: true
     });
   },
 
@@ -178,6 +170,21 @@ const UserService = {
 
   getAllUsersOfARole: async (role) => User.findAll({
     where: { role }
+  }),
+  /**
+* Find Supervisor of a Team
+*/
+
+  findSupervisorOfATeam: async (teamId, transaction = null) => User.findOne({
+    where: {
+      [Op.and]: [
+        { teamId },
+        { role: RolesConstants.SUPERVISOR }
+      ]
+    },
+    ...(transaction && { transaction }),
+    paranoid: false,
+    attributes: { exclude: ['deletedAt'] }
   })
 
 };

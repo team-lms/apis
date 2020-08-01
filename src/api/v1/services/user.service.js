@@ -133,21 +133,12 @@ const UserService = {
     }
 
     if (!orderBy && QueryConstants.SUPERVISOR_SORT_BY.indexOf(sortBy) > -1) {
-      // const order = Sequelize.literal(`Concat(Trim(\`User\`.
-      // \`firstName\`), ' ',Trim(\`User\`.\`middleName\`), ' ',  Trim(\`User\`.\`lastName\`))
-      //  ${sortType}`);
-
       orderBy = {
         order: [
           [{ model: Team, as: 'team' }, { model: User, as: 'users' }, 'firstName', sortType]
         ]
       };
     }
-
-    // const sortByTerm = sortBy === 'name'
-    //   ? Sequelize.fn('concat', Sequelize.fn
-    // ('trim', Sequelize.col('firstName')), ' ', Sequelize.fn('trim', Sequelize.col('lastName')))
-    //   : sortBy;
 
     return User.findAndCountAll({
       attributes: { exclude: ['deviceToken', 'appVersion', 'password', 'updatedAt', 'deletedAt'] },

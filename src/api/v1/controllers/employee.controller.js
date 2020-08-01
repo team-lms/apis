@@ -48,7 +48,7 @@ module.exports = {
         searchTerm: queryFilters.searchTerm || QueryConstants.SEARCH_TERM,
         searchBy: queryFilters.searchBy || QueryConstants.USER_SEARCH_BY[0],
         offset: Number(queryFilters.offset) || QueryConstants.OFFSET,
-        limit: Number(queryFilters.pageNo) || QueryConstants.LIMIT,
+        limit: Number(queryFilters.limit) || QueryConstants.LIMIT,
         sortType: queryFilters.sortType || QueryConstants.SORT_TYPE[0],
         sortBy: queryFilters.sortBy || QueryConstants.USER_SORT_BY[0]
       };

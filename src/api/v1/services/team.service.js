@@ -1,5 +1,6 @@
 const { Op } = require('sequelize');
-const { Team, User } = require('../../../../models');
+const { Team, User, Sequelize } = require('../../../../models');
+const { QueryConstants, StatusConstants } = require('../../../constants');
 
 module.exports = {
 
@@ -15,21 +16,56 @@ module.exports = {
     offset,
     limit,
     sortBy,
-    sortType
-  }) => Team.findAndCountAll({
-    order: [
-      [sortBy, sortType]
-    ],
-    offset,
-    limit,
-    attributes: { exclude: ['updatedAt', 'deletedAt'] },
-    include: [{
-      model: User,
-      as: 'users',
-      attributes: ['id', 'firstName', 'middleName', 'lastName', 'email', 'phoneNumber', 'role']
-    }],
-    distinct: true
-  }),
+    sortType,
+    searchBy,
+    searchTerm
+  }) => {
+    let orderBy = null;
+    if (QueryConstants.TEAM_SORT_BY.indexOf(sortBy) > -1) {
+      orderBy = {
+        order: [
+          [sortBy, sortType]
+        ]
+      };
+    }
+    if (!orderBy && QueryConstants.USER_SORT_BY.indexOf(sortBy) > -1) {
+      orderBy = {
+        order:
+          Sequelize.literal(`Concat(Trim(\`users\`.\`firstName\`), ' ',Trim(\`User\`.\`middleName\`), ' ',  Trim(\`User\`.\`lastName\`)) ${sortType}`)
+      };
+    }
+
+    let searchCriteria = {};
+    searchCriteria = {
+      ...((searchBy && searchTerm) && {
+        [searchBy]: {
+          [Op.substring]: searchTerm
+        }
+      })
+    };
+
+    return Team.findAndCountAll({
+      where: {
+        [Op.and]: [
+          { status: StatusConstants.ACTIVE },
+          searchCriteria
+        ]
+      },
+      order: [
+        [sortBy, sortType]
+      ],
+      offset,
+      limit,
+      ...(orderBy && orderBy),
+      attributes: { exclude: ['updatedAt', 'deletedAt'] },
+      include: [{
+        model: User,
+        as: 'users',
+        attributes: ['id', 'firstName', 'middleName', 'lastName', 'email', 'phoneNumber', 'role']
+      }],
+      distinct: true
+    });
+  },
 
   /**
      * Get team by team name

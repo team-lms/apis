@@ -6,7 +6,7 @@ const {
   Team
 } = require('../../../../models');
 const OtpService = require('./otp.service');
-const { StatusConstants, RolesConstants } = require('../../../constants');
+const { StatusConstants, RolesConstants, QueryConstants } = require('../../../constants');
 
 const UserService = {
 
@@ -100,7 +100,7 @@ const UserService = {
     let searchCriteria = {};
     if (searchBy.toLowerCase() === 'name' && searchTerm) {
       searchCriteria = Sequelize.where(
-        Sequelize.fn('concat', Sequelize.fn('trim', Sequelize.col('firstName')), ' ', Sequelize.fn('trim', Sequelize.col('lastName'))),
+        Sequelize.literal('Concat(Trim(`User`.`firstName`), \' \',Trim(`User`.`middleName`), \' \',  Trim(`User`.`lastName`))'),
         { [Op.substring]: searchTerm }
       );
     } else {
@@ -113,9 +113,32 @@ const UserService = {
       };
     }
 
-    const sortByTerm = sortBy === 'name'
-      ? Sequelize.fn('concat', Sequelize.fn('trim', Sequelize.col('firstName')), ' ', Sequelize.fn('trim', Sequelize.col('lastName')))
-      : sortBy;
+    let orderBy = null;
+    if (QueryConstants.USER_SORT_BY.indexOf(sortBy) > -1) {
+      orderBy = {
+        order: sortBy === 'name'
+          ? Sequelize.literal(`Concat(Trim(\`User\`.\`firstName\`), ' ',Trim(\`User\`.\`middleName\`), ' ',  Trim(\`User\`.\`lastName\`)) ${sortType}`)
+          : [
+            [sortBy, sortType]
+          ]
+      };
+    }
+
+    if (!orderBy && QueryConstants.TEAM_SORT_BY.indexOf(sortBy) > -1) {
+      orderBy = {
+        order: [
+          [{ model: Team, as: 'team' }, sortBy, sortType]
+        ]
+      };
+    }
+
+    if (!orderBy && QueryConstants.SUPERVISOR_SORT_BY.indexOf(sortBy) > -1) {
+      orderBy = {
+        order: [
+          [{ model: Team, as: 'team' }, { model: User, as: 'users' }, 'firstName', sortType]
+        ]
+      };
+    }
 
     return User.findAndCountAll({
       attributes: { exclude: ['deviceToken', 'appVersion', 'password', 'updatedAt', 'deletedAt'] },
@@ -125,7 +148,7 @@ const UserService = {
           searchCriteria
         ]
       },
-      order: [[sortByTerm, sortType]],
+      ...(!!orderBy && orderBy),
       offset,
       limit,
       include: [{

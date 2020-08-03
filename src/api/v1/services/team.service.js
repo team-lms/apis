@@ -1,6 +1,6 @@
 const { Op } = require('sequelize');
 const { Team, User, Sequelize } = require('../../../../models');
-const { QueryConstants } = require('../../../constants');
+const { QueryConstants, StatusConstants } = require('../../../constants');
 
 module.exports = {
 
@@ -16,7 +16,9 @@ module.exports = {
     offset,
     limit,
     sortBy,
-    sortType
+    sortType,
+    searchBy,
+    searchTerm
   }) => {
     let orderBy = null;
     if (QueryConstants.TEAM_SORT_BY.indexOf(sortBy) > -1) {
@@ -33,7 +35,22 @@ module.exports = {
       };
     }
 
+    let searchCriteria = {};
+    searchCriteria = {
+      ...((searchBy && searchTerm) && {
+        [searchBy]: {
+          [Op.substring]: searchTerm
+        }
+      })
+    };
+
     return Team.findAndCountAll({
+      where: {
+        [Op.and]: [
+          { status: StatusConstants.ACTIVE },
+          searchCriteria
+        ]
+      },
       order: [
         [sortBy, sortType]
       ],

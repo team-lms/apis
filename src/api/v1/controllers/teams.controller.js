@@ -20,7 +20,7 @@ module.exports = {
       const queryFilters = req.query;
       const filters = {
         searchTerm: queryFilters.searchTerm || QueryConstants.SEARCH_TERM,
-        searchBy: queryFilters.searchBy || QueryConstants.TEAM_SEARCH_BY,
+        searchBy: queryFilters.searchBy || QueryConstants.TEAM_SEARCH_BY[0],
         offset: Number(queryFilters.offset) || QueryConstants.OFFSET,
         limit: Number(queryFilters.limit) || QueryConstants.LIMIT,
         sortType: queryFilters.sortType || QueryConstants.SORT_TYPE[0],

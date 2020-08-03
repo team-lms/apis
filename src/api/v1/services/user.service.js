@@ -100,7 +100,7 @@ const UserService = {
     let searchCriteria = {};
     if (searchBy.toLowerCase() === 'name' && searchTerm) {
       searchCriteria = Sequelize.where(
-        Sequelize.fn('concat', Sequelize.fn('trim', Sequelize.col('firstName')), ' ', Sequelize.fn('trim', Sequelize.col('lastName'))),
+        Sequelize.literal('Concat(Trim(`User`.`firstName`), \' \',Trim(`User`.`middleName`), \' \',  Trim(`User`.`lastName`))'),
         { [Op.substring]: searchTerm }
       );
     } else {

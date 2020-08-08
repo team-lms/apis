@@ -13,4 +13,9 @@ router.put(
   UserController.updateProfilePicture
 );
 
+router.get(
+  '/',
+  UserController.getProfile
+);
+
 module.exports = router;

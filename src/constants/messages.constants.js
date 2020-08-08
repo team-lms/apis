@@ -17,7 +17,9 @@ module.exports = Object.freeze({
   OTP_DO_NOT_MATCH: 'OTP do not match',
   PASSWORD_UPDATED_SUCCESSFULLY: 'Password has been updated successfully',
   UNAUTHORIZED_USER: 'You are unauthorized',
-  USER_CREATED: 'User Created Successfully', // TODO: This message will not be used in future
+  USER_CREATED: 'User Created Successfully',
+  USER_PROFILE_FETCHED: 'User Profile Fetched successfully',
+  // TODO: This message will not be used in future
   LEAVE_APPLIED: 'Leave has been applied successfully',
   APPLIED_DATE: 'Applied Date is invalid',
   DESIGNATION_ALREADY_EXISTS: 'Designation already exists',

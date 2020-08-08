@@ -33,6 +33,31 @@ module.exports = {
         code
       ));
     }
-  }
+  },
 
+  /**
+   * Get Profile By Token
+   */
+  getProfile: async (req, res) => {
+    try {
+      const { id: userId } = req.userInfo;
+      const foundUser = await UserService.findUserById({ userId });
+      if (!foundUser) {
+        throw new ApiError.ValidationError(
+          MessageCodeConstants.USER_NOT_FOUND
+        );
+      }
+      return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+        MessageCodeConstants.USER_PROFILE_FETCHED,
+        foundUser
+      ));
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      Chalk.red(error);
+      return res.status(code).json(Response.sendError(
+        message,
+        error,
+        code
+      ));
+    }
+  }
 };

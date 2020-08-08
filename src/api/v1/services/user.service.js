@@ -46,7 +46,7 @@ const UserService = {
       id: userId
     },
     paranoid: false,
-    attributes: { exclude: ['deletedAt'] }
+    attributes: { exclude: ['deletedAt', 'password'] }
   }),
 
   /**

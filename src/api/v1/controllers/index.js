@@ -6,6 +6,7 @@ const HrController = require('./hr.controller');
 const TeamController = require('./teams.controller');
 const LeaveController = require('./leave.controller');
 const DesignationController = require('./designation.controller');
+const DashboardController = require('./dashboard.controller');
 
 module.exports = {
   AuthController,
@@ -15,5 +16,6 @@ module.exports = {
   HrController,
   TeamController,
   LeaveController,
-  DesignationController
+  DesignationController,
+  DashboardController
 };

@@ -6,13 +6,16 @@ const { AccessConstants } = require('../../../constants');
 router.use(AuthMiddleware.checkAuth);
 
 router.put(
-  '/:id',
+  '/profile-picture/:id',
   AuthMiddleware.checkAuthByRole(AccessConstants.USER.UPDATE_PROFILE_PICTURE),
   MulterMiddleware.checkAndCreateDir,
   MulterMiddleware.upload().single('profilePicture'),
   UserController.updateProfilePicture
 );
-
+router.put(
+  '/:id',
+  UserController.updateProfile
+);
 router.get(
   '/',
   UserController.getProfile

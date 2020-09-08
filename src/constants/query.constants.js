@@ -1,9 +1,19 @@
 module.exports = Object.freeze({
-  SEARCH_TERM: '',
-  SEARCH_BY: 'name',
+
+  // Common
   OFFSET: 0,
   LIMIT: 10,
   SORT_TYPE: ['DESC', 'ASC'],
-  SORT_BY: 'createdAt',
-  SORT_BY_TEAM_NAME: 'teamName'
+  SEARCH_TERM: '',
+
+  // User
+  USER_SORT_BY: ['createdAt', 'name', 'email'],
+  USER_SEARCH_BY: ['name'],
+
+  // Team
+  TEAM_SORT_BY: ['createdAt', 'teamName'],
+  TEAM_SEARCH_BY: ['teamName'],
+
+  // Supervisor
+  SUPERVISOR_SORT_BY: ['supervisorName']
 });

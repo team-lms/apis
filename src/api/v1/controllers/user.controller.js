@@ -3,6 +3,7 @@ const { Response, ApiError } = require('../../../utils');
 const { StatusCodeConstants, MessageCodeConstants } = require('../../../constants');
 const { CloudinaryHelper } = require('../helpers');
 const { UserService } = require('../services');
+const { UserHelper } = require('../helpers');
 
 module.exports = {
 
@@ -33,6 +34,54 @@ module.exports = {
         code
       ));
     }
-  }
+  },
 
+  /**
+   * Get Profile By Token
+   */
+  getProfile: async (req, res) => {
+    try {
+      const { id: userId } = req.userInfo;
+      const foundUser = await UserService.findUserById({ userId });
+      if (!foundUser) {
+        throw new ApiError.ValidationError(
+          MessageCodeConstants.USER_NOT_FOUND
+        );
+      }
+      return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+        MessageCodeConstants.USER_PROFILE_FETCHED,
+        foundUser
+      ));
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      Chalk.red(error);
+      return res.status(code).json(Response.sendError(
+        message,
+        error,
+        code
+      ));
+    }
+  },
+
+  /**
+   * Update Profile
+   */
+  updateProfile: async (req, res) => {
+    try {
+      const result = await UserHelper.updateUser(req);
+      if (result && result.success) {
+        return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(
+          MessageCodeConstants.USER_PROFILE_UPDATED,
+          {},
+          StatusCodeConstants.SUCCESS
+        ));
+      }
+      return res.status(result.error.responseCode).json(result.error);
+    } catch ({ message, code = StatusCodeConstants.INTERNAL_SERVER_ERROR, error }) {
+      return res.status(code).json(Response.sendError(
+        message,
+        error,
+        code
+      ));
+    }
+  }
 };

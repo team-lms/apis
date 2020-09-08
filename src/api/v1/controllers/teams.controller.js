@@ -19,11 +19,12 @@ module.exports = {
     try {
       const queryFilters = req.query;
       const filters = {
-        search: (queryFilters.search) || (QueryConstants.SEARCH),
-        offset: Number(queryFilters.offset) || (QueryConstants.OFFSET),
-        limit: Number(queryFilters.limit) || (QueryConstants.LIMIT),
-        sortType: (queryFilters.sortType) || (QueryConstants.SORT_TYPE[0]),
-        sortBy: (queryFilters.sortField) || (QueryConstants.SORT_BY_TEAM_NAME)
+        searchTerm: queryFilters.searchTerm || QueryConstants.SEARCH_TERM,
+        searchBy: queryFilters.searchBy || QueryConstants.TEAM_SEARCH_BY[0],
+        offset: Number(queryFilters.offset) || QueryConstants.OFFSET,
+        limit: Number(queryFilters.limit) || QueryConstants.LIMIT,
+        sortType: queryFilters.sortType || QueryConstants.SORT_TYPE[0],
+        sortBy: queryFilters.sortBy || QueryConstants.TEAM_SORT_BY[0]
       };
       const teams = await TeamsService.getAllTeams(filters);
       return res.status(StatusCodeConstants.SUCCESS).json(Response.sendSuccess(

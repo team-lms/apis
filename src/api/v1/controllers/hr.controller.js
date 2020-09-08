@@ -18,11 +18,11 @@ module.exports = {
       const queryFilters = req.query;
       const filters = {
         searchTerm: queryFilters.searchTerm || QueryConstants.SEARCH_TERM,
-        searchBy: queryFilters.searchBy || QueryConstants.SEARCH_BY,
+        searchBy: queryFilters.searchBy || QueryConstants.USER_SEARCH_BY[0],
         offset: Number(queryFilters.offset) || QueryConstants.OFFSET,
         limit: Number(queryFilters.limit) || QueryConstants.LIMIT,
         sortType: queryFilters.sortType || QueryConstants.SORT_TYPE[0],
-        sortBy: queryFilters.sortBy || QueryConstants.SORT_BY
+        sortBy: queryFilters.sortBy || QueryConstants.USER_SORT_BY[0]
       };
       const humanResource = await UserService.getAllUsers(
         { role: RolesConstants.HR },

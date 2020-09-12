@@ -6,9 +6,8 @@ const { Response } = require('../../../utils');
 module.exports = {
   getDashboard: async (req, res) => {
     try {
-      const totalSupervisor = await UserService.countUsers();
+      const totalSupervisor = await UserService.countUsersByRoles();
       const totalTeams = await TeamsService.countTeams();
-      // const upcomingHoliday = await 
       return res.status(StatusCodeConstants.SUCCESS).send(Response.sendSuccess(
         '',
         {

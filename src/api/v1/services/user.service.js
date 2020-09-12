@@ -185,6 +185,22 @@ const UserService = {
     ...(transaction && { transaction }),
     paranoid: false,
     attributes: { exclude: ['deletedAt'] }
+  }),
+
+  /**
+   * Count for dashboard
+   */
+  countUsersByRoles: async () => User.findAll({
+    attributes: {
+      include: [
+        [Sequelize.literal(
+          `COUNT (*) where \`role\` = "${RolesConstants.EMPLOYEE}"`
+        ), 'userCount']
+      ],
+      exclude: ['updatedAt', 'deletedAt', 'firstName', 'middleName', 'lastName', 'email', 'phoneNumber', 'whatsappNumber', 'dateOfBirth', 'address',
+        'id', 'pinCode', 'sex']
+    },
+    paranoid: false
   })
 
 };

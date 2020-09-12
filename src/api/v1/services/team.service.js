@@ -79,6 +79,13 @@ module.exports = {
       ]
     },
     ...(transaction && { transaction })
-  })
+  }),
+
+  /**
+   * Count Teams
+   */
+  countTeams: async () => Team.count(
+    { paranoid: false }
+  )
 
 };
